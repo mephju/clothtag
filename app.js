@@ -12,7 +12,9 @@ app.set('view options', {layout: false})
 
 routes.setRoutesOn(app);
 
-app.listen(3000, function() {
+var port = process.env.PORT || 5000;
+
+app.listen(port, function() {
 	console.log('clothtag listening on port 3000')
 })
 
