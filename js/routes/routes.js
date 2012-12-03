@@ -1,8 +1,8 @@
-
+var data = require('../model/data')
 
 exports.setRoutesOn = function(app) {
 	app.get('/', function(req, res, next) {
-		res.render('index.jade', {
+		res.render('index', {
 			title: "Clothtag App "
 		})
 	})
