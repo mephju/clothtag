@@ -1,8 +1,32 @@
 !!!
 html
 	head
+		
+		link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap.css')
+		link(rel='stylesheet', href='/css/basic.css')
+		link(rel='stylesheet', href='/css/style.css')
 		title= title
 	body
-		div hello Tien
+		div.navbar.navbar-inverse.navbar-fixed-top
+			div.navbar-inner
+				div.container
+					a.btn.btn-navbar
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.brand Clothtag
+
+					div.nav-collapse.collapse
+						ul.nav
+							li.active 
+								a Home
+							li
+								a New Image
+							li
+								a Contact
+
+		
+		div.container
+			h1 hi
 
 	

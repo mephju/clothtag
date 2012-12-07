@@ -10,12 +10,23 @@ app.set('views', __dirname + '/views')
 app.set('view engine', 'jade');
 app.set('view options', {layout: false})
 
+app.use(express.bodyParser({
+	uploadDir: __dirname + '/static/uploads',
+    keepExtensions: true
+}))
+
+app.use(express.static(__dirname + '/static'));
+app.use(express.static(__dirname + '/client'));
+
 routes.setRoutesOn(app);
 
-var port = process.env.PORT || 5000;
+global.port = process.env.PORT || 5000;
 
-app.listen(port, function() {
-	console.log('clothtag listening on port ' + port)
+app.listen(global.port, function() {
+	console.log('clothtag listening on port ' + global.port)
 })
+
+
+
 
 
