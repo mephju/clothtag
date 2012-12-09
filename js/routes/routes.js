@@ -25,13 +25,13 @@ exports.setRoutesOn = function(app) {
 	app.get('/images/:id', function(req, res, next) {
 
 		data.getImage(req.params.id, function(err, image) {
-			if(err) res.render('error')
-			else {
-
+			if(err) {
+				res.render('error')
+			} else {
 				console.log(getHostAndPort(req))
 				res.render('image', {
 					title: image.title,
-					fname: 'http://' + getHostAndPort(req) + '/uploads/' + image.filename
+					fname: 'http://www.clothtag.99k.org/' + image.filename
 				})
 			}
 		})
@@ -49,19 +49,22 @@ exports.setRoutesOn = function(app) {
 		console.log('uploading new image')
 
 		console.log(req.files)
-		//console.log(req.body)
-		var filePathChunks = req.files.image.path.split('/')
 		
 		var store = {
-			filename: filePathChunks[filePathChunks.length -1],
+			path: req.files.image.path,
 			title: req.body.title
 		}
 
 		data.addImage(store, function(err, newStore) {
+			console.log('add image onDonbe')
+			
+			var splits = newStore.path.split('/');
+			var fname = splits[splits.length-1]
+
 			if(err) {
 				res.redirect('/asdfadsf')
 			} else {
-				res.redirect('/images/' + newStore.filename)
+				res.redirect('/images/' + fname)
 			}
 		})
 	

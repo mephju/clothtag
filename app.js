@@ -11,7 +11,7 @@ app.set('view engine', 'jade');
 app.set('view options', {layout: false})
 
 app.use(express.bodyParser({
-	uploadDir: __dirname + '/static/uploads',
+	uploadDir: '/tmp',
     keepExtensions: true
 }))
 
