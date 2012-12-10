@@ -61,19 +61,14 @@ exports.addImage = function(store, onDone) {
 
 
 exports.getImage = function(id, onDone) {
-	var error = false;
+
 	var match = null;
 
 	console.log('retrieve: ' + id)
 	var query = client.query('SELECT * FROM image WHERE filename=$1', [id])	
 
 	query.on('end', function() {
-		if(error) {
-			onDone('error')
-		} else {
-			//query = client.query('SELECT * FROM')
-			onDone(null, match)
-		}
+		onDone(null, match)
 	})
 
 	query.on('row', function(row) {
@@ -83,10 +78,25 @@ exports.getImage = function(id, onDone) {
 
 
 	query.on('error', function(err) {
-		error = true;
-		console.log('error retrieving an image ' + err)
-		
+		onDone(err)
 	})
 }
 
+exports.getImages = function(onDone) {
+	var query = client.query('SELECT * FROM image ORDER BY updated_at DESC LIMIT 12')
+
+	var rows = new Array();
+
+	query.on('end', function() {
+		onDone(null, rows)
+	})
+
+	query.on('row', function(row) {
+		rows.push(row)
+	})
+
+	query.on('error', function(err) {
+		onDone(err)
+	})
+}
 

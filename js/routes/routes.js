@@ -2,15 +2,30 @@ var data = require('../model/data')
 
 exports.setRoutesOn = function(app) {
 	app.get('/', function(req, res, next) {
-		res.render('index', {
-			title: "Clothtag App "
+		
+
+		data.getImages(function(err, images) {
+			if(err) {
+				console.log(err)
+				res.redirect('aasdfasdf')
+			} else {
+				console.log(images)
+				res.render('index', {
+					title: "Recent Images",
+					images: images,
+					template: 'index'
+				})		
+			}
 		})
+
+
+		
 	})
 
 	app.get('/images/new', function(req, res, next) {
 		res.render('images/new', {
 			title:"Upload New Image",
-
+			template:'images/new'
 		})
 	})
 
@@ -31,12 +46,12 @@ exports.setRoutesOn = function(app) {
 				console.log(getHostAndPort(req))
 				res.render('image', {
 					title: image.title,
-					fname: 'http://www.clothtag.99k.org/' + image.filename
+					fname: 'http://www.clothtag.99k.org/' + image.filename,
+					template: 'image'
+
 				})
 			}
-		})
-
-				
+		})		
 	})
 
 

@@ -10,6 +10,11 @@ app.set('views', __dirname + '/views')
 app.set('view engine', 'jade');
 app.set('view options', {layout: false})
 
+app.configure('development', function(){
+  app.use(express.errorHandler());
+  app.locals.pretty = true;
+});
+
 app.use(express.bodyParser({
 	uploadDir: '/tmp',
     keepExtensions: true

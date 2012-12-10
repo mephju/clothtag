@@ -1,0 +1,29 @@
+div.navbar.navbar-inverse.navbar-fixed-top
+			div.navbar-inner
+				div.container
+					a.btn.btn-navbar
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+					a.brand Clothtag
+
+					div.nav-collapse.collapse
+						ul.nav
+							-if(template == 'index') 
+								li.active 
+									a(href='/') Home
+							-else 
+								li
+									a(href='/') Home
+						
+							
+							li
+								a(href='/contact') Contact
+
+
+							-if(template == 'images/new') 
+								li.active 
+									a(href='/images/new') New Image
+							-else 
+								li
+									a(href='/images/new') New Image

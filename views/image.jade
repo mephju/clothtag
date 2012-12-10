@@ -7,27 +7,12 @@ html
 		link(rel='stylesheet', href='/css/style.css')
 		title= title
 	body
-		div.navbar.navbar-inverse.navbar-fixed-top
-			div.navbar-inner
-				div.container
-					a.btn.btn-navbar
-						span.icon-bar
-						span.icon-bar
-						span.icon-bar
-					a.brand Clothtag
-
-					div.nav-collapse.collapse
-						ul.nav
-							li 
-								a Home
-							li
-								a New Image
-							li
-								a Contact
+		include header
 
 		
 
 		div.container
 			h2= title
-			h2= fname
+			p
+				a(href= fname)= fname
 			img(src=fname)
