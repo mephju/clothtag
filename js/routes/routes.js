@@ -16,10 +16,7 @@ exports.setRoutesOn = function(app) {
 					template: 'index'
 				})		
 			}
-		})
-
-
-		
+		})	
 	})
 
 	app.get('/images/new', function(req, res, next) {
@@ -39,24 +36,53 @@ exports.setRoutesOn = function(app) {
 
 	app.get('/images/:id', function(req, res, next) {
 
-		data.getImage(req.params.id, function(err, image) {
+		data.getImage(req.params.id, function(err, imageRec) {
 			if(err) {
 				res.render('error')
 			} else {
-				console.log(getHostAndPort(req))
-				res.render('image', {
-					title: image.title,
-					fname: 'http://www.clothtag.99k.org/' + image.filename,
-					template: 'image'
+				
+				if(imageRec.length) {
+					var image = imageRec[0]
+					res.render('image', {
+						title: image.title,
+						fname: 'http://www.clothtag.99k.org/' + image.filename,
+						template: 'image',
+						filename: image.filename,
+						tags: imageRec
 
-				})
+					})
+				} else {
+					res.render('error')
+				}
+			
 			}
 		})		
 	})
 
 
 
+	//TODO client must do ajax to this url and provide store = {title, link, filename}
+	app.post('/images/:id/tag', function(req, res, next) {
+		
+		var store = {
+			filename: req.params.id,
+			link: req.body.link,
+			title: req.body.title,
+			x: req.body.x,
+			y: req.body.y
+		}
 
+		console.log(store)
+
+		data.addTag(store, function(err) {
+			if(err) {
+				console.log(err)
+				res.redirect('/asdfasdfs')
+			} else {
+				res.redirect('/images/' + store.filename)
+			}
+		})
+	})
 
 
 	app.post('/images', function(req, res, next) {
@@ -93,6 +119,3 @@ exports.setRoutesOn = function(app) {
 }
 
 
-var getHostAndPort = function(req) {
-	return req.header('host')
-}

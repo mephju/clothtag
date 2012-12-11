@@ -62,18 +62,25 @@ exports.addImage = function(store, onDone) {
 
 exports.getImage = function(id, onDone) {
 
-	var match = null;
+	var match = new Array();
 
 	console.log('retrieve: ' + id)
-	var query = client.query('SELECT * FROM image WHERE filename=$1', [id])	
+
+	var sql = 'SELECT image.filename, image.title, image.updated_at, tag.tag_x, tag.tag_y, tag.link, tag.title FROM image LEFT OUTER JOIN tag ON (image.filename=tag.filename) WHERE image.filename=$1'
+
+	var query = client.query(sql, [id])	
+
+	console.log('before querying: ')
+	console.log(query)
 
 	query.on('end', function() {
+		console.log('done with querying')
+		console.log(match)
 		onDone(null, match)
 	})
 
 	query.on('row', function(row) {
-		match = row;
-		console.log(row)
+		match.push(row)
 	})
 
 
@@ -93,6 +100,20 @@ exports.getImages = function(onDone) {
 
 	query.on('row', function(row) {
 		rows.push(row)
+	})
+
+	query.on('error', function(err) {
+		onDone(err)
+	})
+}
+
+
+exports.addTag = function(store, onDone) {
+	var query = client.query('INSERT INTO tag(title, link, filename, tag_x, tag_y) VALUES($1, $2, $3, $4, $5)', 
+		[store.title, store.link, store.filename, store.x, store.y])
+
+	query.on('end',  function() {
+		onDone(null)
 	})
 
 	query.on('error', function(err) {
