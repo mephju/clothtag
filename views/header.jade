@@ -5,7 +5,7 @@ div.navbar.navbar-inverse.navbar-fixed-top
 						span.icon-bar
 						span.icon-bar
 						span.icon-bar
-					a.brand Clothtag
+					a.brand(href='/') Clothtag
 
 					div.nav-collapse.collapse
 						ul.nav
@@ -15,15 +15,12 @@ div.navbar.navbar-inverse.navbar-fixed-top
 							-else 
 								li
 									a(href='/') Home
-						
-							
-							li
-								a(href='/contact') Contact
-
-
+		
 							-if(template == 'images/new') 
 								li.active 
 									a(href='/images/new') New Image
 							-else 
 								li
 									a(href='/images/new') New Image
+							li
+								a(href='/contact') Contact

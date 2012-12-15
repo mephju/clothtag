@@ -47,7 +47,7 @@ exports.setRoutesOn = function(app) {
 						title: image.title,
 						fname: 'http://www.clothtag.99k.org/' + image.filename,
 						template: 'image',
-						filename: image.filename,
+						imageId: image.filename,
 						tags: imageRec
 
 					})
@@ -112,6 +112,13 @@ exports.setRoutesOn = function(app) {
 		
 	})
 
+
+	app.get('/contact', function(req, res) {
+		res.render('contact', {
+			title:'Contact us',
+			template: 'contact'
+		})
+	})
 
 	app.get('*', function(req, res){
   		res.send(404);
