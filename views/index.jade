@@ -1,26 +1,2 @@
-!!!
-html
-	head
-		
-		link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap.css')
-		link(rel='stylesheet', href='/css/basic.css')
-		link(rel='stylesheet', href='/css/style.css')
-		title= title
-	body
-		include header
-		
-		div.container
-			div.hero-unit
-				h1 Clothtag
-				p This is a student project of the Web Application course at the HTW in Berlin
-
-			-for (var i=0; i<images.length; i++) 
-
-				- if ((i%4) == 0)
-					div.row
-						-for(var j=0; j<4 && (i+j) < images.length; j++)
-							div.span3
-								a(href='/images/' + images[i+j].filename) 
-									h2= images[i+j].title
-									img(src='http://www.clothtag.99k.org/' + images[i+j].filename)
-								-if(j == 3) i=i+j
+include layout
+include images

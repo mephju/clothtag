@@ -1,20 +1,12 @@
-!!!
-html
-	head
-		
-		link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap.css')
-		link(rel='stylesheet', href='/css/basic.css')
-		link(rel='stylesheet', href='/css/style.css')
-		title= title
-	body
+include ../layout_1
 		include ../header
 
-		
-
-		div.container
+		include ../logo
+		div.container#upload
 			h2= title
 			form(action='/images', method='POST', enctype="multipart/form-data")
 				input.input.input-block-level(type='file', name='image', accept="image/png, image/jpg, image/gif")	
 				input.input-block-level(type='text', name='title', placeholder='Title')
 				
 				button.btn.btn-large.btn-primary(type='submit') Submit
+	
