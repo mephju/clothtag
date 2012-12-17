@@ -1,0 +1,23 @@
+!!!
+html
+	head
+		
+		link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap.css')
+		link(rel='stylesheet', href='/css/basic.css')
+		link(rel='stylesheet', href='/css/style.css')
+		title= title
+	body
+		include header
+
+		
+
+		div.container
+			h2= title
+			form(action='/users', method='POST', enctype="multipart/form-data")
+				
+				input.input-block-level(type='text', name='user', placeholder='Username')
+				input.input-block-level(type='text', name='email', placeholder='Email')
+				input.input-block-level(type='password', name='pass', placeholder='Passwor')
+				input.input-block-level(type='password', name='passRepeat', placeholder='Repeat Password')
+
+				button.btn.btn-large.btn-primary(type='submit') Submit

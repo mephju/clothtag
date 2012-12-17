@@ -120,6 +120,37 @@ exports.setRoutesOn = function(app) {
 		})
 	})
 
+
+	app.get('/register', function(req, res) {
+		res.render('register', {
+			title: 'Hello New User',
+			template: 'register'
+		})
+	})
+
+	app.post('/users', function(req, res) {
+
+
+		console.log(req.body)
+		var store = req.body
+		store.isActive = false
+
+		data.addUser(store, function(err) {
+			if(err) {
+				console.log(err)
+				res.send('Error creating user')
+			} else {
+
+				res.send('USer successfully created')
+				//code for success
+				// res.render('user', {
+				// 	title:'Please activate your account',
+				// 	template: 'user'
+				// })
+			}
+		})
+	})
+
 	app.get('*', function(req, res){
   		res.send(404);
 	});
