@@ -1,6 +1,18 @@
-include layout
-div.container#image-container
+!!!
+html
+	head
+		
+		link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap.css')
+		link(rel='stylesheet', href='/css/basic.css')
+		link(rel='stylesheet', href='/css/style.css')
+
+		title= title
+
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js')
+	body
+		include header
+
+		div.container#image-container
 			h2= title
 			p Tien Nguyen & Kolja Kirchner
-			| 	
-	
+			| 
