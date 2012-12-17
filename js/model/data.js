@@ -98,9 +98,12 @@ exports.getImages = function(onDone) {
 		onDone(null, rows)
 	})
 
+
 	query.on('row', function(row) {
 		rows.push(row)
 	})
+
+
 
 	query.on('error', function(err) {
 		onDone(err)
@@ -121,3 +124,18 @@ exports.addTag = function(store, onDone) {
 	})
 }
 
+
+
+
+exports.addUser = function(store, onDone) {
+	var query = client.query('INSERT INTO "user"("user", email, pass, is_active) VALUES($1, $2, $3, $4)', 
+		[store.user, store.email, store.pass, store.isActive])
+
+	query.on('end',  function() {
+		onDone(null)
+	})
+
+	query.on('error', function(err) {
+		onDone(err)
+	})
+}
