@@ -21,10 +21,7 @@
 			filename = filename.slice(1, filename.length)
 		}()
 		
-		setup()
-
-
-		
+		setup()		
 	});
 
 
@@ -39,11 +36,23 @@
 	 * 
 	 */
 	var setup = function() {
+		$('.tag-info').mouseover(function(e) {
+			$('.' + $(this).context.id).mouseover()
+		})
+		.mouseout(function(e) {
+			$('.' + $(this).context.id).mouseout()
+		})
+
+
+
+
+
 		$('#image').maphilight()
 		.mouseover(function(e) {
 			$('area').each(function() {
 				$(this).mouseover();
 			})
+
 		})
 		.mouseout(function(e) {
 			$('area').each(function() {
@@ -57,9 +66,12 @@
 				openDialog2(ev)
 			}
 			ev.stopPropagation()
-		}) 
+		})
 
-		//
+
+
+
+		
 		$('html').click(function(e) {
 			console.log('html click event tagMode:isDialogShowing ' + inTagMode + ':' + isDialogShowing)
 			console.log(e)
@@ -69,6 +81,10 @@
 
 		$('.btn').click(function(e) { e.stopPropagation() })
 		$('#dialog').click(function(e) { e.stopPropagation() })
+
+		$('#dialog').click(function(e) { e.stopPropagation() })
+
+
 	}
 
 
@@ -139,9 +155,6 @@
 		}).done(function(msg) {
 			window.location.reload()
 		});
-
-		
-		
 	}
 
 

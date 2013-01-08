@@ -1,3 +1,4 @@
+/
 !!!
 html
 	head
@@ -17,14 +18,32 @@ html
 		include header
 
 		div.container#image-container
-			h2= title
-			p
-				a#image-link(href= fname)= fname
-			p
-				img(src=fname, id='image', usemap='#tagmap')
-				map(id='tagmap', shape='circle', name='tagmap')
-					each tag in tags
-						area.image-area(shape="circle", coords= tag.tag_x + ',' + tag.tag_y + ',' + 20, href='http://' + tag.link, title=tag.title, alt=tag.title)
+			div.row
+				div.span6
+					h2= title
+					p
+						a#image-link(href= fname)= fname
+					p
+						img(src=fname, id='image', usemap='#tagmap')
+						map(id='tagmap', shape='circle', name='tagmap')
+							each tag, idx in tags
+								area.image-area(
+									class='tag' + idx, 
+									shape="circle", 
+									coords= tag.tag_x + ',' + tag.tag_y + ',' + 20, 
+									href='http://' + tag.link, 
+									title=tag.title, 
+									alt=tag.title)
 
-			p
-				button.btn.btn-primary(onclick="tagging.toggleTagMode()") Tag That Photo
+					p
+						button.btn.btn-primary(onclick="tagging.toggleTagMode()") Tag That Photo
+				div.span6
+					each tag, idx in tags
+						div.well.well-small.tag-info(id='tag' + idx)
+							- if (!tag.title)
+								h4 No Title Given
+							- else 
+								h4= tag.title	
+							p
+								a(href= tag.link)= tag.link
+
