@@ -6,7 +6,7 @@
 //
 var pg = require('pg')
 
-var imageStore = require('../storage/image-store')
+var imageStore = require('./image-store')
 
 var connectionString = 'postgres://_s0541224__clothtagdb_generic:clothtag@db.f4.htw-berlin.de:5432/_s0541224__clothtagdb'
 

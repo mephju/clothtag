@@ -1,12 +1,11 @@
 var express = require('express')
 
 var app = express()
-var routes = require('./js/routes/routes')
-
-//app.register('.html', require('jade'));
+var routes = require('./routes/routes')
 
 
-app.set('views', __dirname + '/views')
+
+app.set('views', __dirname + '/../views')
 app.set('view engine', 'jade');
 app.set('view options', {layout: false})
 
@@ -20,8 +19,8 @@ app.use(express.bodyParser({
     keepExtensions: true
 }))
 
-app.use(express.static(__dirname + '/static'));
-app.use(express.static(__dirname + '/client'));
+
+app.use(express.static(__dirname + '/../../client'));
 
 routes.setRoutesOn(app);
 
