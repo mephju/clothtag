@@ -3,13 +3,13 @@ var data = require('../model/data')
 exports.setRoutesOn = function(app) {
 	app.get('/', function(req, res, next) {
 		
+		console.log("GET /")
 
 		data.getImages(function(err, images) {
 			if(err) {
 				console.log(err)
 				res.redirect('aasdfasdf')
 			} else {
-				console.log(images)
 				res.render('index', {
 					title: "Recent Images",
 					images: images,
@@ -20,6 +20,9 @@ exports.setRoutesOn = function(app) {
 	})
 
 	app.get('/images/new', function(req, res, next) {
+
+		console.log("GET /images/new")
+
 		res.render('images/new', {
 			title:"Upload New Image",
 			template:'images/new'
@@ -27,6 +30,9 @@ exports.setRoutesOn = function(app) {
 	})
 
 	app.get('/images/search/:searchkey', function(req, res, next) {
+
+		console.log("GET /images/search/:searchkey")
+
 		res.render('image', {
 			title: "Clothtag App "
 		})
@@ -36,19 +42,36 @@ exports.setRoutesOn = function(app) {
 
 	app.get('/images/:id', function(req, res, next) {
 
+		console.log("GET /images/:id")
+
 		data.getImage(req.params.id, function(err, imageRec) {
 			if(err) {
 				res.render('error')
 			} else {
 				
 				if(imageRec.length) {
+
 					var image = imageRec[0]
+					var tags = new Array()
+					imageRec.forEach(function(elem) {
+						if(elem.title_tag && elem.link && elem.tag_x && elem.tag_y) {
+							var tag = {}
+
+							tag.title_tag = elem.title_tag
+							tag.link = elem.link
+							tag.tag_x = elem.tag_x
+							tag.tag_y = elem.tag_y
+							tags.push(tag)	
+						}
+						
+					})
+
 					res.render('image', {
-						title: image.title,
+						title: image.title_img,
 						fname: 'http://www.clothtag.99k.org/' + image.filename,
 						template: 'image',
 						imageId: image.filename,
-						tags: imageRec
+						tags: tags
 
 					})
 				} else {
@@ -63,6 +86,8 @@ exports.setRoutesOn = function(app) {
 
 	//TODO client must do ajax to this url and provide store = {title, link, filename}
 	app.post('/images/:id/tag', function(req, res, next) {
+
+		console.log("GET /images/:id/tag")
 		
 		var store = {
 			filename: req.params.id,
@@ -89,12 +114,14 @@ exports.setRoutesOn = function(app) {
 
 		console.log('uploading new image')
 
-		console.log(req.files)
+		
 		
 		var store = {
 			path: req.files.image.path,
 			title: req.body.title
 		}
+
+		console.log(store)
 
 		data.addImage(store, function(err, newStore) {
 			console.log('add image onDonbe')
@@ -103,7 +130,7 @@ exports.setRoutesOn = function(app) {
 			var fname = splits[splits.length-1]
 
 			if(err) {
-				res.redirect('/asdfadsf')
+				res.redirect('/error')
 			} else {
 				res.redirect('/images/' + fname)
 			}
@@ -114,6 +141,9 @@ exports.setRoutesOn = function(app) {
 
 
 	app.get('/contact', function(req, res) {
+
+		console.log("GET /contact")
+
 		res.render('contact', {
 			title:'Contact us',
 			template: 'contact'
@@ -122,6 +152,9 @@ exports.setRoutesOn = function(app) {
 
 
 	app.get('/register', function(req, res) {
+
+		console.log("GET /register")
+
 		res.render('register', {
 			title: 'Hello New User',
 			template: 'register'
@@ -130,6 +163,7 @@ exports.setRoutesOn = function(app) {
 
 	app.post('/users', function(req, res) {
 
+		console.log("GET /users")
 
 		console.log(req.body)
 		var store = req.body

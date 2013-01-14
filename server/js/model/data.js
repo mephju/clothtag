@@ -66,7 +66,7 @@ exports.getImage = function(id, onDone) {
 
 	console.log('retrieve: ' + id)
 
-	var sql = 'SELECT image.filename, image.title, image.updated_at, tag.tag_x, tag.tag_y, tag.link, tag.title FROM image LEFT OUTER JOIN tag ON (image.filename=tag.filename) WHERE image.filename=$1'
+	var sql = 'SELECT image.filename, image.title as title_img, image.updated_at, tag.tag_x, tag.tag_y, tag.link, tag.title as title_tag FROM image LEFT OUTER JOIN tag ON (image.filename=tag.filename) WHERE image.filename=$1'
 
 	var query = client.query(sql, [id])	
 

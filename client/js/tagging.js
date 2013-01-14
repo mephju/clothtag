@@ -36,7 +36,8 @@
 	 * 
 	 */
 	var setup = function() {
-		$('.tag-info').mouseover(function(e) {
+		$('.tag-info')
+		.mouseover(function(e) {
 			$('.' + $(this).context.id).mouseover()
 		})
 		.mouseout(function(e) {
@@ -47,7 +48,8 @@
 
 
 
-		$('#image').maphilight()
+		$('#image')
+		.maphilight()
 		.mouseover(function(e) {
 			$('area').each(function() {
 				$(this).mouseover();
@@ -79,7 +81,9 @@
 			else if(inTagMode) toggleTagMode()
 		})
 
-		$('.btn').click(function(e) { e.stopPropagation() })
+		$('.btn').click(function(e) { 
+			e.stopPropagation() 
+		})
 		$('#dialog').click(function(e) { e.stopPropagation() })
 
 		$('#dialog').click(function(e) { e.stopPropagation() })
