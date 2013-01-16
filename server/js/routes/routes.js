@@ -121,21 +121,20 @@ exports.setRoutesOn = function(app) {
         })
     })
 
-        app.get('*', function(req, res){
+    app.get('*', function(req, res){
         res.send(404);
     });
     app.get('/error', function(req, res){
         var err_msg = 'null'
-                        res.render('error',{
-                            title: err_msg,
-                            error_message: err_msg,
-                            template: 'error'
-                        })
+        res.render('error',{
+            title: err_msg,
+            error_message: err_msg,
+            template: 'error'
+        })
     })
    
-   var user = require('../user.js')
+    var user = require('../user.js')
     app.get('/login', user.login)   
-    
     app.post('/login-success', user.loginSuccess)
     app.get('/register', user.register)
     app.post('/users', user.users)
