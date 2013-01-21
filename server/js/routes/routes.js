@@ -1,193 +1,177 @@
 var data = require('../model/data')
+var imageRoutes = require('./images')
+var email = require('../../../node_modules/emailjs/email')
 
-exports.setRoutesOn = function(app) {
-	app.get('/', function(req, res, next) {
-		
-		console.log("GET /")
 
-		data.getImages(function(err, images) {
-			if(err) {
-				console.log(err)
-				res.redirect('aasdfasdf')
-			} else {
-				res.render('index', {
-					title: "Recent Images",
-					images: images,
-					template: 'index'
-				})		
-			}
-		})	
-	})
+var server  = email.server.connect({
+    user:    "myhanhphucpham",
+    password:"ithinkiloveu",
+    host:    "smtp.gmail.com",
+    ssl:     true
+});
 
-	app.get('/images/new', function(req, res, next) {
-
-		console.log("GET /images/new")
-
-		res.render('images/new', {
-			title:"Upload New Image",
-			template:'images/new'
-		})
-	})
-
-	app.get('/images/search/:searchkey', function(req, res, next) {
-
-		console.log("GET /images/search/:searchkey")
-
-		res.render('image', {
-			title: "Clothtag App "
-		})
-	})
 
 
 
-	app.get('/images/:id', function(req, res, next) {
+exports.setRoutesOn = function(app) {
 
-		console.log("GET /images/:id")
+    var serverError = function(msg, req, res, next) {
+        res.render('error', {
+            error_message: msg,
+            title:msg,
+            template:"error"
+        })
+    }
 
-		data.getImage(req.params.id, function(err, imageRec) {
-			if(err) {
-				res.render('error')
-			} else {
-				
-				if(imageRec.length) {
-
-					var image = imageRec[0]
-					var tags = new Array()
-					imageRec.forEach(function(elem) {
-						if(elem.title_tag && elem.link && elem.tag_x && elem.tag_y) {
-							var tag = {}
-
-							tag.title_tag = elem.title_tag
-							tag.link = elem.link
-							tag.tag_x = elem.tag_x
-							tag.tag_y = elem.tag_y
-							tags.push(tag)	
-						}
-						
-					})
-
-					res.render('image', {
-						title: image.title_img,
-						fname: 'http://www.clothtag.99k.org/' + image.filename,
-						template: 'image',
-						imageId: image.filename,
-						tags: tags
-
-					})
-				} else {
-					res.render('error')
-				}
-			
-			}
-		})		
-	})
+    app.get('/', imageRoutes.getImages)
 
 
-
-	//TODO client must do ajax to this url and provide store = {title, link, filename}
-	app.post('/images/:id/tag', function(req, res, next) {
-
-		console.log("GET /images/:id/tag")
-		
-		var store = {
-			filename: req.params.id,
-			link: req.body.link,
-			title: req.body.title,
-			x: req.body.x,
-			y: req.body.y
-		}
-
-		console.log(store)
-
-		data.addTag(store, function(err) {
-			if(err) {
-				console.log(err)
-				res.redirect('/asdfasdfs')
-			} else {
-				res.redirect('/images/' + store.filename)
-			}
-		})
-	})
+    app.get('/images/new', imageRoutes.getNewImage)
+    app.get('/images/search/:searchkey', imageRoutes.search) 
+    app.get('/images/:id', imageRoutes.getImage)
+    //TODO client must do ajax to this url and provide store = {title, link, filename}
+    app.post('/images/:id/tag', imageRoutes.postTag)
+    app.post('/images', imageRoutes.postImage)
 
 
-	app.post('/images', function(req, res, next) {
+    app.get('/contact', function(req, res) {
+        res.render('contact', {
+            title:'Contact us',
+            template: 'contact'
+        })
+    })
 
-		console.log('uploading new image')
+    // main login page
+    app.get('/login', function(req, res) {
+        res.render('login', {
+            title: 'Login',
+            template: 'login'
+        })
+    })
 
-		
-		
-		var store = {
-			path: req.files.image.path,
-			title: req.body.title
-		}
-
-		console.log(store)
-
-		data.addImage(store, function(err, newStore) {
-			console.log('add image onDonbe')
-			
-			var splits = newStore.path.split('/');
-			var fname = splits[splits.length-1]
-
-			if(err) {
-				res.redirect('/error')
-			} else {
-				res.redirect('/images/' + fname)
-			}
-		})
-	
-		
-	})
+    app.post('/login-success', function(req, res, next) {
 
 
-	app.get('/contact', function(req, res) {
+        console.log(req.body)
+        var store = req.body
 
-		console.log("GET /contact")
+        data.validateLogin(store, function(err,match) {
+            if(err != undefined || match == undefined) {
+                console.log(err)
+                //res.send('User not found or account is not activated')
+                var err_msg = 'User not found or account is not activated'
+                serveError(err_msg, req, res, next)
+            } else {
+                res.redirect('/');
+            }
+        })
+    })
 
-		res.render('contact', {
-			title:'Contact us',
-			template: 'contact'
-		})
-	})
+    app.get('/register', function(req, res) {
+        res.render('register', {
+            title: 'Hello New User',
+            template: 'register'
+        })
+    })
+
+    app.post('/users', function(req, res) {
 
 
-	app.get('/register', function(req, res) {
+        console.log(req.body)
+        var store = req.body
+        store.isActive = false
+    
+    if(store.user != '' || store.email != '' || store.pass != '' || store.passRepeat != ''){
+        data.addUser(store, function(err) {
+            
+            if(err) {
+                console.log(err)
+                res.send('Error creating user')
+            } else {
+                var link = '<p><a href="http://localhost:3000/activate?email=' + store.email +'">Activate your account</a></p>'
+                var recipient = store.user + ' <' + store.email + '>'
+                var html = '<html><body>';
+                html +='<p>Please click on the link below to activate your account</p>'
+                html += link
+                html +='</body></html>'
 
-		console.log("GET /register")
+                var message = {
+                    text:    "i hope this works",
+                    from:    "you <myhanhphucpham@gmail.com>",
+                    to:      recipient,//"tien <idonwant2missathing@yahoo.com>",
+                    subject: "link activation",
+                    attachment:
+                    [
+                    {
+                        data:html,
+                        alternative:true
+                    },
 
-		res.render('register', {
-			title: 'Hello New User',
-			template: 'register'
-		})
-	})
+                    ]
+                };
+                server.send(message, function(err, message) {
+                    if(err){
+                        console.log(err || message);
+                        //res.send('cannot send activation link')
+                        
+                        var err_msg = 'cannot send activation link'
+                        res.render('error',{
+                            title: err_msg,
+                            error_message: err_msg,
+                            template: 'error'
+                        })
+                    }
+                    else{
+                        res.render('users', {
+                            title:'Please activate your account',
+                            template: 'user'
+                        })
+                    }
 
-	app.post('/users', function(req, res) {
+                });
 
-		console.log("GET /users")
+            }
+            
+        })} else {
+                var err_msg = 'invalid fields'
+                        res.render('error',{
+                            title: err_msg,
+                            error_message: err_msg,
+                            template: 'error'
+                        })
+            }
+    })
 
-		console.log(req.body)
-		var store = req.body
-		store.isActive = false
+    app.get('/activate', function(req, res) {
 
-		data.addUser(store, function(err) {
-			if(err) {
-				console.log(err)
-				res.send('Error creating user')
-			} else {
+        var email = req.query['email']
 
-				res.send('USer successfully created')
-				//code for success
-				// res.render('user', {
-				// 	title:'Please activate your account',
-				// 	template: 'user'
-				// })
-			}
-		})
-	})
+        data.activateAccount(email, function(err) {
+            if(err) {
+                console.log(err)
+                res.send('Could not update database')
+            } else {
 
-	app.get('*', function(req, res){
-  		res.send(404);
-	});
+                res.redirect('/login');
+            }
+        })
+    })
+
+
+    app.get('*', function(req, res){
+        
+    });
+
+
+    app.get('/error', function(req, res){
+        var err_msg = 'null'
+                        res.render('error',{
+                            title: err_msg,
+                            error_message: err_msg,
+                            template: 'error'
+                        })
+    })
+
 }
 
 

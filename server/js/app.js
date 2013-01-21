@@ -24,7 +24,7 @@ app.use(express.static(__dirname + '/../../client'));
 
 routes.setRoutesOn(app);
 
-global.port = process.env.PORT || 5000;
+global.port = process.env.PORT || 3000;
 
 app.listen(global.port, function() {
 	console.log('clothtag listening on port ' + global.port)

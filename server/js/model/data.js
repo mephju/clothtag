@@ -124,12 +124,56 @@ exports.addTag = function(store, onDone) {
 	})
 }
 
-
+var crypto = require('crypto')
+hash = function (pass, salt){
+    var h = crypto.createHash('sha512')
+    
+    h.update(pass)
+    h.update(salt)
+    
+    return h.digest('base64')
+    
+}
 
 
 exports.addUser = function(store, onDone) {
+        hashed_pass = hash(store.pass, store.email)
 	var query = client.query('INSERT INTO "user"("user", email, pass, is_active) VALUES($1, $2, $3, $4)', 
-		[store.user, store.email, store.pass, store.isActive])
+		[store.user, store.email, hashed_pass, store.isActive])
+
+	query.on('end',  function() {
+		onDone(null)
+	})
+
+	query.on('error', function(err) {
+		onDone(err)
+	})
+}
+
+// login validation method
+exports.validateLogin = function(store, onDone){
+    var match = new Array();
+    var hashed_pass = hash(store.pass, store.email)
+    
+        var query = client.query('SELECT * FROM "user" WHERE pass = $1 AND email = $2 AND is_active=TRUE', [hashed_pass, store.email])
+
+        
+        console.log('before querying: ')
+	console.log(query)
+
+	query.on('end', function() {
+		console.log('done with querying')
+		console.log(match)
+		onDone(null,match[0])
+	})
+
+	query.on('row', function(row) {
+		match.push(row)
+	})
+} 
+exports.activateAccount = function(email, onDone){
+    var query = client.query('UPDATE "user" SET is_active=$1 WHERE email=$2', 
+		['true',email])
 
 	query.on('end',  function() {
 		onDone(null)
