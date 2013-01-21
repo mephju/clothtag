@@ -24,3 +24,16 @@ div.navbar.navbar-inverse.navbar-fixed-top
 									a(href='/images/new') New Image
 							li
 								a(href='/contact') Contact
+							
+							
+							li
+								div.register
+									form(action='/login-success', method='POST', enctype="multipart/form-data", class="form-inline", id="left")
+					
+										input.input-block-level(type='text', name='email', placeholder='Email', class="input-small")
+										input.input-block-level(type='password', name='pass', placeholder='Password', class="input-small")
+
+										button(type='submit') Sign in
+					
+							li
+								a(href='/register') Register

@@ -1,5 +1,5 @@
 var data = require('../model/data')
-
+var user = require('../user/user')
 
 exports.setRoutesOn = function(app) {
     app.get('/', function(req, res, next) {
@@ -114,6 +114,19 @@ exports.setRoutesOn = function(app) {
     })
 
 
+//    app.get('/register', function(req, res) {
+//                res.render('register', {
+//                    title:'register first',
+//                    template: 'register'
+//                })
+//            })
+    app.get('/register', user.register)
+    app.get('/login', user.login)   
+    app.post('/login-success', user.loginSuccess)
+    app.get('/register', user.register)
+    app.post('/users', user.users)
+    app.get('/activate', user.activate)
+    
     app.get('/contact', function(req, res) {
         res.render('contact', {
             title:'Contact us',
@@ -133,13 +146,15 @@ exports.setRoutesOn = function(app) {
                         })
     })
    
-   var user = require('../user.js')
-    app.get('/login', user.login)   
+   //var user = require('../user/user.js')
+    //app.get('/login', user.login)   
     
-    app.post('/login-success', user.loginSuccess)
-    app.get('/register', user.register)
-    app.post('/users', user.users)
-    app.get('/activate', user.activate)
+    //app.post('/login-success', user.loginSuccess)
+    //app.get('/register', user.register)
+
+
+    //app.post('/users', user.users)
+    //app.get('/activate', user.activate)
 }
 
 
