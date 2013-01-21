@@ -1,10 +1,11 @@
 var email = require('emailjs')
 var server  = email.server.connect({
-    user:    "myhanhphucpham",
-    password:"ithinkiloveu",
+    user:    "clothtag",
+    password:"clothtag-htw",
     host:    "smtp.gmail.com",
     ssl:     true
 });
+var data = require('../model/data')
 
 exports.login = function(req, res, next){
 // main login page
@@ -43,6 +44,7 @@ exports.login = function(req, res, next){
     
     
     exports.register = function(req, res) {
+        console.log('register')
         res.render('register', {
             title: 'Hello New User',
             template: 'register'

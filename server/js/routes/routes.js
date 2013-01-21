@@ -1,5 +1,5 @@
 var data = require('../model/data')
-
+var user = require('../user/user')
 
 exports.setRoutesOn = function(app) {
     app.get('/', function(req, res, next) {
@@ -114,6 +114,19 @@ exports.setRoutesOn = function(app) {
     })
 
 
+//    app.get('/register', function(req, res) {
+//                res.render('register', {
+//                    title:'register first',
+//                    template: 'register'
+//                })
+//            })
+    app.get('/register', user.register)
+    app.get('/login', user.login)   
+    app.post('/login-success', user.loginSuccess)
+    app.get('/register', user.register)
+    app.post('/users', user.users)
+    app.get('/activate', user.activate)
+    
     app.get('/contact', function(req, res) {
         res.render('contact', {
             title:'Contact us',
@@ -121,24 +134,27 @@ exports.setRoutesOn = function(app) {
         })
     })
 
-    app.get('*', function(req, res){
+        app.get('*', function(req, res){
         res.send(404);
     });
     app.get('/error', function(req, res){
         var err_msg = 'null'
-        res.render('error',{
-            title: err_msg,
-            error_message: err_msg,
-            template: 'error'
-        })
+                        res.render('error',{
+                            title: err_msg,
+                            error_message: err_msg,
+                            template: 'error'
+                        })
     })
    
-    var user = require('../user.js')
-    app.get('/login', user.login)   
-    app.post('/login-success', user.loginSuccess)
-    app.get('/register', user.register)
-    app.post('/users', user.users)
-    app.get('/activate', user.activate)
+   //var user = require('../user/user.js')
+    //app.get('/login', user.login)   
+    
+    //app.post('/login-success', user.loginSuccess)
+    //app.get('/register', user.register)
+
+
+    //app.post('/users', user.users)
+    //app.get('/activate', user.activate)
 }
 
 
