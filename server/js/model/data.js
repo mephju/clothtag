@@ -66,12 +66,11 @@ exports.getImage = function(id, onDone) {
 
 	console.log('retrieve: ' + id)
 
-	var sql = 'SELECT image.filename, image.title, image.updated_at, tag.tag_x, tag.tag_y, tag.link, tag.title FROM image LEFT OUTER JOIN tag ON (image.filename=tag.filename) WHERE image.filename=$1'
+	var sql = 'SELECT image.filename, image.title as title_img, image.updated_at, tag.tag_x, tag.tag_y, tag.link, tag.title as title_tag FROM image LEFT OUTER JOIN tag ON (image.filename=tag.filename) WHERE image.filename=$1'
 
 	var query = client.query(sql, [id])	
 
 	console.log('before querying: ')
-	console.log(query)
 
 	query.on('end', function() {
 		console.log('done with querying')
@@ -112,8 +111,14 @@ exports.getImages = function(onDone) {
 
 
 exports.addTag = function(store, onDone) {
-	var query = client.query('INSERT INTO tag(title, link, filename, tag_x, tag_y) VALUES($1, $2, $3, $4, $5)', 
+	console.log('adding tag')
+	try {
+		var query = client.query('INSERT INTO tag(title, link, filename, tag_x, tag_y) VALUES($1, $2, $3, $4, $5)', 
 		[store.title, store.link, store.filename, store.x, store.y])
+	} catch(err) {
+		console.log(err)
+		onDone(err)
+	}	
 
 	query.on('end',  function() {
 		onDone(null)
@@ -125,7 +130,7 @@ exports.addTag = function(store, onDone) {
 }
 
 var crypto = require('crypto')
-hash = function (pass, salt){
+var hash = function (pass, salt){
     var h = crypto.createHash('sha512')
     
     h.update(pass)
@@ -137,7 +142,7 @@ hash = function (pass, salt){
 
 
 exports.addUser = function(store, onDone) {
-        hashed_pass = hash(store.pass, store.email)
+    var hashed_pass = hash(store.pass, store.email)
 	var query = client.query('INSERT INTO "user"("user", email, pass, is_active) VALUES($1, $2, $3, $4)', 
 		[store.user, store.email, hashed_pass, store.isActive])
 
@@ -150,21 +155,38 @@ exports.addUser = function(store, onDone) {
 	})
 }
 
+
+exports.removeUser = function(user, onDone) {
+	console.log('removing user ' + user.email)
+	var query = client.query('DELETE FROM "user" WHERE email=$1', [user.email])
+
+	query.on('end', function() {
+		console.log('removing user worked' + user.email)
+		onDone(null)
+	})
+
+	query.on('error', function(err) {
+		console.log('removing did NOT work', err)
+		onDone(err)
+	})
+}
+
 // login validation method
 exports.validateLogin = function(store, onDone){
     var match = new Array();
     var hashed_pass = hash(store.pass, store.email)
     
-        var query = client.query('SELECT * FROM "user" WHERE pass = $1 AND email = $2 AND is_active=TRUE', [hashed_pass, store.email])
-
-        
-        console.log('before querying: ')
-	console.log(query)
+    var query = client.query('SELECT * FROM "user" WHERE pass = $1 AND email = $2 AND is_active=TRUE', [hashed_pass, store.email])
 
 	query.on('end', function() {
 		console.log('done with querying')
 		console.log(match)
-		onDone(null,match[0])
+		if(match.length > 0) {
+			onDone(null, match[0])	
+		} else {
+			onDone('no match for user ' + store.email)
+		}
+		
 	})
 
 	query.on('row', function(row) {
