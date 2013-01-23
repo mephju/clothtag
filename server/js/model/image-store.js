@@ -27,7 +27,10 @@ exports.uploadImage = function(store, onDone) {
 		} else {
 			var splits = store.path.split('/');
 			var fname = splits[splits.length-1]
-			conn.put(fname, data, onDone)		
+			conn.put(fname, data, function(err) {
+				conn.close()
+				onDone(err)
+			})		
 		}
 		
 	});
