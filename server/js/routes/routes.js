@@ -1,15 +1,18 @@
 var data = require('../model/data')
 
+
 var imageRoutes = require('./images')
-var email = require('../../../node_modules/emailjs/email')
+
+var user = require('../user/user')
 
 
-var server  = email.server.connect({
-    user:    "myhanhphucpham",
-    password:"ithinkiloveu",
-    host:    "smtp.gmail.com",
-    ssl:     true
-});
+
+// var server  = email.server.connect({
+//     user:    "myhanhphucpham",
+//     password:"ithinkiloveu",
+//     host:    "smtp.gmail.com",
+//     ssl:     true
+// });
 
 
 
@@ -36,6 +39,19 @@ exports.setRoutesOn = function(app) {
     app.post('/images', imageRoutes.postImage)
 
 
+//    app.get('/register', function(req, res) {
+//                res.render('register', {
+//                    title:'register first',
+//                    template: 'register'
+//                })
+//            })
+    app.get('/register', user.register)
+    app.get('/login', user.login)   
+    app.post('/login-success', user.loginSuccess)
+    app.get('/register', user.register)
+    app.post('/users', user.users)
+    app.get('/activate', user.activate)
+    
     app.get('/contact', function(req, res) {
         res.render('contact', {
             title:'Contact us',
@@ -56,12 +72,23 @@ exports.setRoutesOn = function(app) {
         
     });
    
+
     // var user = require('../user.js')
     // app.get('/login', user.login)   
     // app.post('/login-success', user.loginSuccess)
     // app.get('/register', user.register)
     // app.post('/users', user.users)
     // app.get('/activate', user.activate)
+
+   //var user = require('../user/user.js')
+    //app.get('/login', user.login)   
+    
+    //app.post('/login-success', user.loginSuccess)
+    //app.get('/register', user.register)
+
+
+    //app.post('/users', user.users)
+    //app.get('/activate', user.activate)
 
 }
 

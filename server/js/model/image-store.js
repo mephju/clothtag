@@ -23,16 +23,18 @@ exports.uploadImage = function(store, onDone) {
 
 	fs.readFile(store.path, function (err, data) {
 		if (err) {
-	    	console.log('error ' + err)
+	    	console.log('error uploading image', err)
 		} else {
 			var splits = store.path.split('/');
 			var fname = splits[splits.length-1]
 			conn.put(fname, data, function(err) {
-				conn.close()
-				onDone(err)
+				conn.raw.quit(function(err, data) {
+    				console.log("end ftp connection");
+				});
+				
 			})		
 		}
-		
+		onDone(err)
 	});
 }
 

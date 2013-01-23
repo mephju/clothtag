@@ -21,19 +21,25 @@ describe.skip('model/data test suite', function() {
 		it('should run', function(done) {
 			this.timeout(100000)
 			var image1 = {
-        path: '/home/mephju/Pictures/ani07.jpg',
-        title: 'test: added by mocha'
-    	}
+        		path: '/home/mephju/Pictures/ani07.jpg',
+        		title: 'test: added by mocha'
+    		}
 			imageStore.uploadImage(image1, done)
 		})
 	})
 })
 
 
-describe('suite: data test', function() {
-	describe('addTag()', function(done) {
-		it('adding tag to non existent image should not work', function(done) {
+var testAddingTagToNonExistentImage = function() {
 			
+}
+testAddingTagToNonExistentImage()
+
+describe('Data Test:', function() {
+	describe.skip('addTag()', function() {
+		it('should not add a tag', function(done) {
+			console.log('test adding tag')
+
 			var store = {
 				title:'test tag title',
 				link:'I go nowhere',
@@ -43,8 +49,41 @@ describe('suite: data test', function() {
 			}
 			data.addTag(store, function(err) {
 				console.log(err)
-				assert.ifError(err)		
-				done()
+				assert.notStrictEqual(
+					err, 
+					null, 
+					'adding tag to non existent image doesnt work...good')		
+			})
+		})
+	})
+
+	describe('getImage()', function() {
+		it('should not return an image', function(done) {
+			data.getImage('*..-09//?', function(err, match) {
+				
+				if(typeof match == 'undefined' || match.length > 0) {
+					console.log('did work...error!')
+					done('error: trying to get non existent image worked...weird')					
+				} else if(match.length == 0) {
+					console.log('length 0....ok')
+					done(null)
+				}
+
+			})
+		})
+	})
+
+
+	describe('getImages()', function() {
+		it('should return lots of images', function(done) {
+			data.getImages(function(err, matches) {
+				
+				if(err !== null && matches.length > 0)  {
+					done()
+				} else {
+					done(err)
+				}
+
 			})
 		})
 	})
