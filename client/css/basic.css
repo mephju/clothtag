@@ -3,13 +3,12 @@ body {
 }
 
 
-.register{
-    float: left;
-   
-    border: 1px solid red;
-    
-}
-.form-inline {
-    float: left;
+.right{
+    float: right;
+    position: relative;
+    right: -350px;
 }
 
+.error{
+    color: red;
+}

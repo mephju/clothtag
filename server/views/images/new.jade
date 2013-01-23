@@ -5,6 +5,11 @@ html
 		link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap.css')
 		link(rel='stylesheet', href='/css/basic.css')
 		link(rel='stylesheet', href='/css/style.css')
+		link(rel='stylesheet', href='/js/fileupload/bootstrap-fileupload.css')
+		<!--http://jasny.github.com/bootstrap/javascript.html#fileupload-->
+		
+		script(type='text/javascript', src='/js/fileupload/bootstrap-fileupload.js')
+		
 		title= title
 	body
 		include ../header
@@ -13,8 +18,19 @@ html
 
 		div.container
 			h2= title
-			form(action='/images', method='POST', enctype="multipart/form-data")
-				input.input.input-block-level(type='file', name='image', accept="image/png, image/jpg, image/gif")	
-				input.input-block-level(type='text', name='title', placeholder='Title')
-				
-				button.btn.btn-large.btn-primary(type='submit') Submit
+			form(action='/images', method='POST', enctype="multipart/form-data", class="form-horizontal")
+				div.control-group
+					label(class='control-label', for='inputFile') Choose a File
+					div.controls
+						
+						span.btn.btn-file Upload										
+							input(type='file', name='image', accept="image/png, image/jpg, image/gif")
+
+				div.control-group
+					label(class='control-label', for='inputTitle') Title
+					div.controls
+	
+						input(type='text', name='title', placeholder='Title')
+				div.control-group
+					div.controls
+						button.btn.btn-primary(type='submit') Submit	
