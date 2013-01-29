@@ -1,5 +1,5 @@
 var data = require('../model/data')
-
+var imageStore = require('../model/image-store')
 
 exports.getNewImage = function(req, res, next) {
     res.render('images/new', {
@@ -69,12 +69,6 @@ exports.getImages = function(req, res, next) {
 //TODO client must do ajax to this url and provide store = {title, link, filename}
 exports.postTag = function(req, res, next) {
 
-    console.log('postTag is executed', req)
-    console.log('')
-    console.log('')
-    console.log('')
-    console.log('')
-
     var store = {
         filename: req.params.id,
         link: req.body.link,
@@ -98,7 +92,7 @@ exports.postTag = function(req, res, next) {
 
 exports.postImage = function(req, res, next) {
 
-    console.log('uploading new image')
+    console.log('images.postImage')
 
     console.log(req.files)
 
@@ -110,13 +104,16 @@ exports.postImage = function(req, res, next) {
     data.addImage(store, function(err, newStore) {
         console.log('add image onDonbe')
 
-        var splits = newStore.path.split('/');
-        var fname = splits[splits.length-1]
-
         if(err) {
-            res.redirect('/asdfadsf')
+            res.redirect('/error')
         } else {
+            var splits = newStore.path.split('/');
+            var fname = splits[splits.length-1]
             res.redirect('/images/' + fname)
         }
     })
+    
+
+    
+        
 }

@@ -24,7 +24,9 @@ html
 					p
 						a#image-link(href= fname)= fname
 					p
-						img(src=fname, id='image', usemap='#tagmap', width='100%', height='100%')
+				
+						img.resize(src=fname, id='image', usemap='#tagmap')
+						
 						map(id='tagmap', shape='circle', name='tagmap')
 							each tag, idx in tags
 								area.image-area(
@@ -46,4 +48,6 @@ html
 								h4= tag.title_tag	
 							p
 								a(href= tag.link)= tag.link
+
+
 

@@ -34,7 +34,7 @@ exports.addImage = function(store, onDone) {
 			onDone('error')
 		} else {
 			console.log('no error uploading image...proceed with saveToDb')
-			var error = false;
+			var error = null;
 
 			var splits = store.path.split('/');
 			var fname = splits[splits.length-1]
@@ -43,18 +43,21 @@ exports.addImage = function(store, onDone) {
 			var query = client.query('INSERT INTO image(filename, title) VALUES($1, $2)', [fname, store.title])	
 
 			query.on('end', function() {
-				if(error) {	onDone('error') }
-				else {		onDone(null, store)	}
+				onDone(error, store)
 			})
 
 			query.on('error', function(err) {
-				error = true;
+				error = err;
 				console.log('error inserting image ' + err)
 			})
 		}		
 	}
 
-	imageStore.uploadImage(store, saveToDb);	
+	imageStore.resize(store.path, function(err) {
+		if(err) throw "error resizing image: " + err
+		console.log('no error resizing image...proceeding to upload image')
+		imageStore.uploadImage(store, saveToDb)
+	})	
 }
 
 

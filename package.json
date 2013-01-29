@@ -4,7 +4,8 @@
 	"dependencies": {
 		"jade": "*",
 		"express":"*",
-		"pg": "*"
+		"pg": "*",
+		"imagemagick":"*"
 	},
 	"engines": {
 		"node":"0.8.x",
