@@ -1,3 +1,9 @@
+/**
+ * Entry point module. This is the module called by node in the cli.
+ * It's only purpose is to configure Node, Jade and Express properly 
+ * and to finally start the built-in http server. 
+ */
+
 var express = require('express')
 
 var app = express()

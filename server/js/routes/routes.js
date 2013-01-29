@@ -1,8 +1,10 @@
-var data = require('../model/data')
+/**
+ * This module's only ppurpose is to associate routes to their controller 
+ * functions. 
+ */
 
-
+var data = require('../model/data'
 var imageRoutes = require('./images')
-
 var user = require('../user/user')
 
 

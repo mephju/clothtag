@@ -1,3 +1,9 @@
+/**
+ * mocha.js tests
+ * Attempts to cover database related functions in the data module.
+ * called by mocha.js and not by node.
+ */
+
 var assert = require('assert')
 var data = require('../model/data')
 var imageStore = require('../model/image-store')

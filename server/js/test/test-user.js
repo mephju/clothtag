@@ -1,3 +1,8 @@
+/**
+ * mocha.js tests.
+ * Attempts to cover user module code.
+ */
+
 var assert 		= require('assert')
 var userMan 	= require('../user/user')
 var data		= require('../model/data')

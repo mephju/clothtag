@@ -1,3 +1,7 @@
+/**
+ * This module is responsible for saving data into our postgres database.
+ */
+
 //url: db.f4.htw-berlin.de:5432:require
 //db: _s0541224__clothtagdb
 //user: _s0541224__clothtagdb_generic
@@ -18,11 +22,11 @@ client.connect();
 // query.on('end', function() { client.end(); })
 
 
+
 /**
- * [addImage description]
- * @param {[type]} filename 
- * [filename of the image to be referenced in db. absolute path
- * @param {[type]} onDone   [description]
+ * Saves metadata of an image into the image table.
+ * @param {[type]} store  metadata to be saved
+ * @param {[type]} onDone finish callback
  */
 exports.addImage = function(store, onDone) {
 
@@ -63,6 +67,11 @@ exports.addImage = function(store, onDone) {
 
 
 
+/**
+ * Retrieves image metadata for image with particular id.
+ * @param  {[type]} id     id of image to retrieve metadata for
+ * @param  {[type]} onDone finish callback
+ */
 exports.getImage = function(id, onDone) {
 
 	var match = new Array();
@@ -91,6 +100,12 @@ exports.getImage = function(id, onDone) {
 	})
 }
 
+
+
+/**
+ * Retrieves meta data of up to 12 of the latest images.
+ * @param  {[type]} onDone finish callback
+ */
 exports.getImages = function(onDone) {
 	var query = client.query('SELECT * FROM image ORDER BY updated_at DESC LIMIT 12')
 
@@ -99,20 +114,28 @@ exports.getImages = function(onDone) {
 	query.on('end', function() {
 		onDone(null, rows)
 	})
-
-
 	query.on('row', function(row) {
 		rows.push(row)
 	})
-
-
-
 	query.on('error', function(err) {
 		onDone(err)
 	})
 }
 
 
+/**
+ * Inserts a tag into the tag table.
+ * Beware that the tag references an image from the image table so that
+ * record must exist before you can insert tags.
+ * @param {[type]} store  Contains tag information:
+ *                        store = { filename: req.params.id,
+        							link: req.body.link,
+        							title: req.body.title,
+        							x: req.body.x,
+        							y: req.body.y
+    						}
+ * @param {[type]} onDone 	finish callback
+ */
 exports.addTag = function(store, onDone) {
 
 	var err = null
@@ -147,7 +170,12 @@ var hash = function (pass, salt){
     
 }
 
-
+/**
+ * Adds user into the user table
+ * @param {[type]} store  Contains user data and should look somewhat like this:
+ *                        var store = {user: 'username', passwd:'userpass', email:user@'email.com' }
+ * @param {[type]} onDone finish callback
+ */
 exports.addUser = function(store, onDone) {
     var hashed_pass = hash(store.pass, store.email)
 	var query = client.query('INSERT INTO "user"("user", email, pass, is_active) VALUES($1, $2, $3, $4)', 
@@ -163,6 +191,13 @@ exports.addUser = function(store, onDone) {
 }
 
 
+
+/**
+ * Removes a user from the user table
+ * @param  {[type]} user   Contains user data of the user to be removed
+ *                         var user = { email: "em@il.com"}
+ * @param  {[type]} onDone finish callback
+ */
 exports.removeUser = function(user, onDone) {
 	console.log('removing user ' + user.email)
 	var query = client.query('DELETE FROM "user" WHERE email=$1', [user.email])
@@ -178,7 +213,11 @@ exports.removeUser = function(user, onDone) {
 	})
 }
 
-// login validation method
+/**
+ * Use this method to check the user credentials provided by a user upon login.
+ * @param  {[type]} store  Contains login data
+ * @param  {[type]} onDone finish callback
+ */
 exports.validateLogin = function(store, onDone){
     var match = new Array();
     var hashed_pass = hash(store.pass, store.email)
@@ -200,6 +239,13 @@ exports.validateLogin = function(store, onDone){
 		match.push(row)
 	})
 } 
+
+
+/**
+ * Activates a user. Use this method to ensure a user's provided email is correct.
+ * @param  {[type]} email  User's email to identify user
+ * @param  {[type]} onDone finish callback
+ */
 exports.activateAccount = function(email, onDone){
     var query = client.query('UPDATE "user" SET is_active=$1 WHERE email=$2', 
 		['true',email])

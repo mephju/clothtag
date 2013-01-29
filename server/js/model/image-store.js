@@ -1,6 +1,7 @@
-// Assume we have the same connection 'conn' from before and are currently
-  // authenticated ...
-
+/**
+ * This module is responsible for uploading images via ftp to our
+ * ftp-accessible web space.
+ */
 
 var fs = require('fs');
 var Ftp = require('jsftp');
@@ -10,6 +11,16 @@ var isConnected = false;
 
 var conn = null;
 
+
+/**
+ * Upload an image to the web.
+ * 
+ * @param  {[type]} store  Contains the absolute path to an uploaded 
+ *                         file in the /tmp directory.     
+ *                         store = { path: req.files.image.path, title: req.body.title }
+ * @param  {[type]} onDone the callback to be invoked upon once the operation is finished.
+ *                         accepts an error object as first parameter. onDone('there was an error')
+ */
 exports.uploadImage = function(store, onDone) {
 
 	console.log('imageStore.uploadImage')
@@ -39,6 +50,9 @@ exports.uploadImage = function(store, onDone) {
 	}
 }
 
+/**
+ * Returns the file name of path
+ */
 var getLastPathChunk = function(path) {
 	var splits = path.split('/')
 	return splits[splits.length-1]
@@ -51,7 +65,12 @@ var getLastPathChunk = function(path) {
 
 
 
-
+/**
+ * Resized an image to a fixed width and retain proper aspect ratio.
+ * @param  {[type]} path   Path to the image file to be resized. 
+ * @param  {[type]} onDone finish callback which accept an error object as its 
+ *                         first parameter.
+ */
 exports.resize = function(path, onDone) {
 	console.log('imageStore.resize')
 	im.resize({

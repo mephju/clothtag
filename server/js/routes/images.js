@@ -1,6 +1,15 @@
+/**
+ * This module is the image controller of our application.
+ * All views interested in image manipulation must call functions of this module.
+ */
+
 var data = require('../model/data')
 var imageStore = require('../model/image-store')
 
+
+/**
+ * Renders view images/new
+ */
 exports.getNewImage = function(req, res, next) {
     res.render('images/new', {
         title:"Upload New Image",
@@ -8,13 +17,11 @@ exports.getNewImage = function(req, res, next) {
     })
 }
 
-exports.search = function(req, res, next) {
-    res.render('image', {
-        title: "Clothtag App "
-    })
-}
 
-
+/**
+ * [getImages description]
+ * Renders our index page
+ */
 exports.getImages = function(req, res, next) {
     data.getImages(function(err, images) {
         if(err) {
@@ -31,7 +38,9 @@ exports.getImages = function(req, res, next) {
     })
 }
 
-
+/**
+ * Renders the image page for a particular image.
+ */
  exports.getImage = function(req, res, next) {
      console.log("GET /images/:id")
      data.getImage(req.params.id, function(err, imageRec) {
@@ -66,7 +75,10 @@ exports.getImages = function(req, res, next) {
  }
 
 
-//TODO client must do ajax to this url and provide store = {title, link, filename}
+/**
+ * Adds a tag to an existing imags. 
+ * Redirects to the image page this request is coming from.
+ */
 exports.postTag = function(req, res, next) {
 
     var store = {
@@ -89,7 +101,10 @@ exports.postTag = function(req, res, next) {
     })
 }
 
-
+/**
+ * Views call this function to upload new images. It renders the image page
+ * of the uploaded image in case of success.
+ */
 exports.postImage = function(req, res, next) {
 
     console.log('images.postImage')
