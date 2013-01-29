@@ -1,10 +1,16 @@
- var tagging = function() {}
+ /**
+  * This javascript is loaded by our /image view and is responsible for
+  * the tagging feature on the client side. That is it sends tag requests containing
+  * coordinates and tag data to the server.
+  */
+
+ var tagging = function() {} //global module
 
  tagging = (function() {
 
-	var inTagMode = false
-	var isDialogShowing = false
-	var filename = null;
+	var inTagMode = false			//we need to keep track of if tag mode is on or off
+	var isDialogShowing = false		//keep track of the view state. is dialog showing or not
+	var filename = null;			//the filename of the image this view is showing
 
 
 	
@@ -91,32 +97,12 @@
 	}
 
 
-
 	/**
-	 * for now we just show a simple prompt box 
-	 * @param  {[type]} ev [description]
-	 * @return {[type]}    [description]
+	 * Opens a dialog which hides behind the html code showing the image and tag data.
+	 * The dialog contains to input fields the user must use to supply tag information such
+	 * as a title and a link.
+	 * Defines event handler for submit event which makes the actual tagging request to the server.
 	 */
-	// var openDialog = function(ev) {
-
-	// 	isDialogShowing = true
-	// 	savedEvent = ev
-
-	// 	console.log('open dialog')
-	// 	var link = prompt("Please provide the link of that item");
-	// 	if (link != null && link != "") {
-	// 		console.log('got link ' + link)
-
-
-	// 		console.log($('#image-link'))
-
-	// 		sendTagRequest(link, filename, ev)
-
-	// 	}
-	// } 
-
-
-
 	var openDialog2 = function(ev) {
 		//
 		//console.log('event looks like this ', ev)
@@ -158,9 +144,6 @@
 		})
 
 
-
-		
-
 		dialog
 		.css('top',  ev.pageY - dialog.height()/2)
 		.css('left', ev.pageX  - dialog.width()/2)
@@ -171,6 +154,10 @@
 	}
 
 
+	/**
+	 * Closes the dialog by hiding it behind the image html code
+	 * Should be called whenever we are in tag mode and the user clicks outside of the image.
+	 */
 	var closeDialog = function() {
 		//console.log('closeDialog')
 		isDialogShowing = false
@@ -180,10 +167,11 @@
 
 	
 
-
-
-
-
+	/**
+	 * We can either be in normal mode or in tag mode.
+	 * In tag mode the cursor must change into a crosshair if hovering above of the image.
+	 * This function takes care of that behavior.
+	 */
 	toggleTagMode = function() {
 		inTagMode = !inTagMode
 		console.log('toggleTagMode ' + inTagMode)
