@@ -19,7 +19,6 @@ app.use(express.bodyParser({
     keepExtensions: true
 }))
 
-
 app.use(express.static(__dirname + '/../../client'));
 
 routes.setRoutesOn(app);

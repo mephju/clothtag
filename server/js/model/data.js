@@ -111,7 +111,9 @@ exports.getImages = function(onDone) {
 
 
 exports.addTag = function(store, onDone) {
-	console.log('adding tag')
+
+	var err = null
+	console.log('data.addTag: adding tag', store)
 	try {
 		var query = client.query('INSERT INTO tag(title, link, filename, tag_x, tag_y) VALUES($1, $2, $3, $4, $5)', 
 		[store.title, store.link, store.filename, store.x, store.y])
@@ -121,11 +123,13 @@ exports.addTag = function(store, onDone) {
 	}	
 
 	query.on('end',  function() {
-		onDone(null)
+		console.log('on end exectured')
+		onDone(err)
 	})
 
-	query.on('error', function(err) {
-		onDone(err)
+	query.on('error', function(e) {
+		err = e
+		console.log('on error executed')
 	})
 }
 

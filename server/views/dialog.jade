@@ -2,11 +2,7 @@ div#mask
 	div#dialog
 		div.container
 			h2 Tag Image
-			form(
-				id='tag-form',
-				action='/images/' + imageId + '/tag', 
-				method='POST', 
-				enctype="multipart/form-data")
+			form(id='tag-form')
 				
 				fieldset
 					p
@@ -14,5 +10,5 @@ div#mask
 					p
 						input(type='text', name='title', placeholder='Title')
 			
-			button.btn.btn-large.btn-primary(onclick='tagging.sendTag()') Submit
+					input(type='submit', id='#send-tag', value='Submit')
 		

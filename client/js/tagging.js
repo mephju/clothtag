@@ -4,8 +4,6 @@
 
 	var inTagMode = false
 	var isDialogShowing = false
-	var savedEvent = null;
-	
 	var filename = null;
 
 
@@ -75,8 +73,9 @@
 
 		
 		$('html').click(function(e) {
-			console.log('html click event tagMode:isDialogShowing ' + inTagMode + ':' + isDialogShowing)
-			console.log(e)
+			//
+			//console.log('html click event tagMode:isDialogShowing ' + inTagMode + ':' + isDialogShowing)
+			//console.log(e)
 			if(isDialogShowing) closeDialog()
 			else if(inTagMode) toggleTagMode()
 		})
@@ -119,56 +118,70 @@
 
 
 	var openDialog2 = function(ev) {
+		//
+		//console.log('event looks like this ', ev)
 		isDialogShowing = true
-		savedEvent = ev
+		
+		var offsetX = ev.offsetX
+		var offsetY = ev.offsetY
 
 		$('#mask').fadeTo(0, 0.8)
 
-		$('#dialog')
-		.css('top',  ev.pageY)
-		.css('left', ev.pageX)
+		var dialog = $('#dialog');
+
+		$('#tag-form').submit(function() {
+			console.log('sendTag: this is just a test')
+			console.log("ev", offsetX, offsetY, ev)
+			
+			
+
+			var values = $('#tag-form').serializeArray();
+			//console.log(values)
+
+			$.ajax({
+				type: "POST",
+				dataType:'json',
+				url: "/images/" + filename + "/tag",
+				data: { 
+					link: values[0].value,
+					title: values[1].value,
+					x: offsetX,
+					y: offsetY
+
+				}
+			}).done(function(msg) {
+				console.log(ev)
+				window.location.reload()
+			});
+
+			return true;
+		})
+
+
+
+		
+
+		dialog
+		.css('top',  ev.pageY - dialog.height()/2)
+		.css('left', ev.pageX  - dialog.width()/2)
 		.fadeIn(0)
+
+
 
 	}
 
 
 	var closeDialog = function() {
-		console.log('closeDialog')
+		//console.log('closeDialog')
 		isDialogShowing = false
 		$('#dialog').hide()
 		$('#mask').hide()
 	}
 
-	var sendTag = function() {
-		console.log('sendTag: this is just a test')
-
-		
-		var values = $('#tag-form').serializeArray();
-		console.log(values)
-
-		$.ajax({
-			type: "POST",
-			url: "/images/" + filename + "/tag",
-			data: { 
-				link: values[0].value,
-				title: values[1].value,
-				x: savedEvent.offsetX,
-				y: savedEvent.offsetY
-
-			}
-		}).done(function(msg) {
-			window.location.reload()
-		});
-	}
-
-
-
-	var sendTagRequest = function(link, filename, ev) {
-
-		//$('#form').submit()
-
 	
-	}
+
+
+
 
 
 	toggleTagMode = function() {
@@ -182,7 +195,6 @@
 
 	return { 
 		toggleTagMode: toggleTagMode,
-		sendTag: sendTag
 	}
 })()
 

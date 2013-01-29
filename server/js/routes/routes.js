@@ -34,7 +34,6 @@ exports.setRoutesOn = function(app) {
     app.get('/images/new', imageRoutes.getNewImage)
     app.get('/images/search/:searchkey', imageRoutes.search) 
     app.get('/images/:id', imageRoutes.getImage)
-    //TODO client must do ajax to this url and provide store = {title, link, filename}
     app.post('/images/:id/tag', imageRoutes.postTag)
     app.post('/images', imageRoutes.postImage)
 
@@ -60,7 +59,7 @@ exports.setRoutesOn = function(app) {
     })
 
     app.get('/error', function(req, res){
-        var err_msg = 'null'
+        var err_msg = 'There was an error'
         res.render('error',{
             title: err_msg,
             error_message: err_msg,
@@ -69,26 +68,12 @@ exports.setRoutesOn = function(app) {
     })
 
     app.get('*', function(req, res){
-        
+        res.render('error', {
+            title:"404 - Not Found",
+            error_message:"404 -  Not Found",
+            template:'error'
+        })
     });
-   
-
-    // var user = require('../user.js')
-    // app.get('/login', user.login)   
-    // app.post('/login-success', user.loginSuccess)
-    // app.get('/register', user.register)
-    // app.post('/users', user.users)
-    // app.get('/activate', user.activate)
-
-   //var user = require('../user/user.js')
-    //app.get('/login', user.login)   
-    
-    //app.post('/login-success', user.loginSuccess)
-    //app.get('/register', user.register)
-
-
-    //app.post('/users', user.users)
-    //app.get('/activate', user.activate)
 
 }
 

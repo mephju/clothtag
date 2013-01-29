@@ -66,12 +66,14 @@ exports.getImages = function(req, res, next) {
  }
 
 
-
-
-
-
 //TODO client must do ajax to this url and provide store = {title, link, filename}
 exports.postTag = function(req, res, next) {
+
+    console.log('postTag is executed', req)
+    console.log('')
+    console.log('')
+    console.log('')
+    console.log('')
 
     var store = {
         filename: req.params.id,
@@ -81,12 +83,12 @@ exports.postTag = function(req, res, next) {
         y: req.body.y
     }
 
-    console.log(store)
+    //console.log(store)
 
     data.addTag(store, function(err) {
         if(err) {
             console.log(err)
-            res.redirect('/asdfasdfs')
+            //res.redirect('/error')
         } else {
             res.redirect('/images/' + store.filename)
         }
