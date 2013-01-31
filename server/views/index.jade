@@ -9,11 +9,19 @@ html
 	body
 		include header
 		
+		
 		div.container
-			div.hero-unit
-				h1 Clothtag
-				p This is a student project of the Web Application course at the HTW in Berlin
+			div.row
+				div.span5 
+					h3 Find the clothes you've always wanted
+					p Upload a picture displaying the object of your desire. Our users will be happy to help you out by tagging the picture with links to shops selling this fine garment.
 
+				div.offset2.span5
+					h3 Help others to find cool clothes
+					p You know where to buy the hat on that picture? Tell us and others will be just as happy to help you
+			div.row
+				p
+		div.container
 			-for (var i=0; i<images.length; i++) 
 
 				- if ((i%4) == 0)

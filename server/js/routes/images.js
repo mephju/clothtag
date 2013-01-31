@@ -5,7 +5,9 @@
 
 var data = require('../model/data')
 var imageStore = require('../model/image-store')
-
+var check = require('validator').check
+var sanit = require('validator').sanitize
+var url = require('url')
 
 /**
  * Renders view images/new
@@ -68,7 +70,7 @@ exports.getImages = function(req, res, next) {
                      tags: tags
                  })
              } else {
-                 res.render('error')
+                 res.redirect('/error')
              }           
          }
      })      
@@ -80,6 +82,7 @@ exports.getImages = function(req, res, next) {
  * Redirects to the image page this request is coming from.
  */
 exports.postTag = function(req, res, next) {
+    console.log(req.route.path)
 
     var store = {
         filename: req.params.id,
@@ -89,17 +92,34 @@ exports.postTag = function(req, res, next) {
         y: req.body.y
     }
 
-    //console.log(store)
+   
+    if(check(store.link).isUrl()) {
 
-    data.addTag(store, function(err) {
-        if(err) {
-            console.log(err)
-            //res.redirect('/error')
-        } else {
-            res.redirect('/images/' + store.filename)
-        }
-    })
+        var m = url.parse(store.link, false, true)
+        m.protocol = "http"
+        
+        console.log(m)
+        store.link = url.format(m)
+
+
+        console.log('link is valid', store.link)
+        data.addTag(store, function(err) {
+            if(err) {
+                res.send('no url')
+            } else {
+                res.redirect('/images/' + store.filename)
+            }
+        })
+    } else {
+        console.log('link is not valid')
+        res.send(500, 'Check your link again, please. Seems like it is not valid:(')
+    }
+
+
+
+    
 }
+
 
 /**
  * Views call this function to upload new images. It renders the image page

@@ -3,7 +3,7 @@
  * functions. 
  */
 
-var data = require('../model/data'
+var data = require('../model/data')
 var imageRoutes = require('./images')
 var user = require('../user/user')
 
@@ -22,13 +22,7 @@ var user = require('../user/user')
 
 exports.setRoutesOn = function(app) {
 
-    var serverError = function(msg, req, res, next) {
-        res.render('error', {
-            error_message: msg,
-            title:msg,
-            template:"error"
-        })
-    }
+
 
     app.get('/', imageRoutes.getImages)
 
@@ -61,10 +55,10 @@ exports.setRoutesOn = function(app) {
     })
 
     app.get('/error', function(req, res){
-        var err_msg = 'There was an error'
+        var err = 'There was an error'
         res.render('error',{
-            title: err_msg,
-            error_message: err_msg,
+            title: err,
+            error_message: err,
             template: 'error'
         })
     })
