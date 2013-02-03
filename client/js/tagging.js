@@ -135,9 +135,14 @@
 					y: offsetY
 
 				}
-			}).done(function(msg) {
-				console.log(ev)
-				window.location.reload()
+			})
+			.fail(function(fn, msg) {
+				console.log('fail()', msg)
+				console.log(fn)
+			})
+			.done(function(msg) {
+				console.log('postTag returned', msg)
+				//window.location.reload()
 			});
 
 			return true;

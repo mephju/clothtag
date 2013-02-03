@@ -20,12 +20,15 @@ app.configure('development', function(){
   app.locals.pretty = true;
 });
 
-app.use(express.bodyParser({
-	uploadDir: '/tmp',
-    keepExtensions: true
-}))
 
-app.use(express.static(__dirname + '/../../client'));
+app
+	.use(express.logger('short'))
+	.use(express.favicon())
+	.use(express.bodyParser({
+		uploadDir: '/tmp',
+    	keepExtensions: true
+	}))
+	.use(express.static(__dirname + '/../../client'));
 
 routes.setRoutesOn(app);
 
