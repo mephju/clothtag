@@ -65,7 +65,7 @@
 				$(this).mouseout();
 			})
 		})
-		.click(function(e) { e.preventDefault(); })
+		.click(function(ev) { ev.preventDefault(); })
 		.click(function(ev) {
 			console.log(ev)
 			if(inTagMode) {
@@ -113,7 +113,7 @@
 
 		$('#mask').fadeTo(0, 0.8)
 
-		var dialog = $('#dialog');
+		var dialog = $('#dialog')
 
 		$('#tag-form').submit(function() {
 			console.log('sendTag: this is just a test')
@@ -146,6 +146,14 @@
 			});
 
 			return true;
+		})
+
+
+		$('tag-title').keydown(function(ev) {
+			if(ev.keycode == 13) {
+				this.form.submit()
+				return false
+			}
 		})
 
 
