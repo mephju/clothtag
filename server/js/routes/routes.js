@@ -3,7 +3,7 @@
  * functions. 
  */
 
-var data = require('../model/data'
+var data = require('../model/data')
 var imageRoutes = require('./images')
 var user = require('../user/user')
 
