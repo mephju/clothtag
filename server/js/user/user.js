@@ -122,6 +122,7 @@ exports.logout = function(req, res, next){
                         res.render('error',{
                             title: err_msg,
                             error_message: err_msg,
+                            username: username,
                             template: 'error'
                         })
                     }
