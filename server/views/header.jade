@@ -15,19 +15,28 @@ div.navbar.navbar-inverse.navbar-fixed-top
 							-else 
 								li
 									a(href='/') Home
-		
-							-if(template == 'images/new') 
-								li.active 
-									a(href='/images/new') New Image
-							-else 
+							-if(username!='')	
+						
+								-if(template == 'images/new') 
+									li.active 
+										a(href='/images/new') New Image
+								-else 
+									li
+										a(href='/images/new') New Image
 								li
-									a(href='/images/new') New Image
+									a(href='/myimages') My Images
 							li
 								a(href='/contact') Contact
 							
 							div.right	
 								ul.nav
-									li
-										a(href='/login') Sign in
+									-if(username!='')
+										li
+											a(href='/') hallo #{username}
+										li	
+											a(href='/logout') Sign out
+									-else 
+										li
+											a(href='/login') Sign in
 										li
 											a(href='/register') Register

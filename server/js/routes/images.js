@@ -8,6 +8,9 @@ var imageStore = require('../model/image-store')
 var check = require('validator').check
 var sanit = require('validator').sanitize
 var url = require('url')
+var username = ''
+var useremail = ''
+
 
 /**
  * Renders view images/new
@@ -15,6 +18,7 @@ var url = require('url')
 exports.getNewImage = function(req, res, next) {
     res.render('images/new', {
         title:"Upload New Image",
+        username: username,
         template:'images/new'
     })
 }
@@ -25,17 +29,40 @@ exports.getNewImage = function(req, res, next) {
  * Renders our index page
  */
 exports.getImages = function(req, res, next) {
+    
+    if(req.cookies.session_id){ // if cookie still exists
+        console.log(req.cookies.session_id)
+        data.getUserSession(req.cookies.session_id, function ( err, match){
+           
+           if(err){
+                console.log(err)
+
+           }
+           else {
+                username = match.user
+                useremail = match.email
+                console.log( username)
+           }
+        })
+    }else{
+        username=''
+    }
+         
+    
     data.getImages(function(err, images) {
         if(err) {
             console.log(err)
             serveError("Could not fetch images", req, res, next)
         } else {
-            console.log(images)
-            res.render('index', {
-                title: "Recent Images",
-                images: images,
-                template: 'index'
-            })
+            
+                //console.log(images)
+                res.render('index', {
+                       title: "Recent Images",
+                       images: images,
+                       username: username,
+                       template: 'index'
+                })
+            
         }
     })
 }
@@ -67,7 +94,8 @@ exports.getImages = function(req, res, next) {
                      fname: 'http://www.clothtag.99k.org/' + image.filename,
                      template: 'image',
                      imageId: image.filename,
-                     tags: tags
+                     tags: tags,
+                     username: username
                  })
              } else {
                  res.redirect('/error')
@@ -126,7 +154,7 @@ exports.postTag = function(req, res, next) {
  * of the uploaded image in case of success.
  */
 exports.postImage = function(req, res, next) {
-
+ 
     console.log('images.postImage')
 
     console.log(req.files)
@@ -136,7 +164,7 @@ exports.postImage = function(req, res, next) {
         title: req.body.title
     }
 
-    data.addImage(store, function(err, newStore) {
+    data.addImage(store, useremail, function(err, newStore) {
         console.log('add image onDonbe')
 
         if(err) {
@@ -152,3 +180,41 @@ exports.postImage = function(req, res, next) {
     
         
 }
+
+exports.getMyImages = function(req,res,next){
+    
+    data.getMyImages(useremail, function(err, images) {
+        if(err) {
+            console.log(err)
+            serveError("Could not fetch images", req, res, next)
+        } else {
+            
+                //console.log(images)
+                res.render('index', {
+                       title: "Recent Images",
+                       images: images,
+                       username: username,
+                       template: 'index'
+                })
+            
+        }
+    })
+}
+
+exports.contact = function(req,res, next){
+    res.render('contact', {
+            title:'Contact us',
+            username: username,
+            template: 'contact'
+        })
+}
+
+exports.error = function(req, res){
+        var err = 'There was an error'
+        res.render('error',{
+            title: err,
+            error_message: err,
+            template: 'error',
+            username: username
+        })
+    }

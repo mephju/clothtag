@@ -28,7 +28,7 @@ client.connect();
  * @param {[type]} store  metadata to be saved
  * @param {[type]} onDone finish callback
  */
-exports.addImage = function(store, onDone) {
+exports.addImage = function(store, useremail, onDone) {
 
 	
 
@@ -44,7 +44,7 @@ exports.addImage = function(store, onDone) {
 			var fname = splits[splits.length-1]
 
 			console.log('insert: ' + store)
-			var query = client.query('INSERT INTO image(filename, title) VALUES($1, $2)', [fname, store.title])	
+			var query = client.query('INSERT INTO image(filename, title, uploaded_by) VALUES($1, $2, $3)', [fname, store.title, useremail])	
 
 			query.on('end', function() {
 				onDone(error, store)
@@ -122,7 +122,23 @@ exports.getImages = function(onDone) {
 	})
 }
 
+exports.getMyImages = function(useremail, onDone) {
+    var query = client.query('SELECT * FROM image WHERE uploaded_by=$1',[useremail])
 
+	var rows = new Array();
+
+	var rows = new Array();
+
+	query.on('end', function() {
+		onDone(null, rows)
+	})
+	query.on('row', function(row) {
+		rows.push(row)
+	})
+	query.on('error', function(err) {
+		onDone(err)
+	})
+}
 /**
  * Inserts a tag into the tag table.
  * Beware that the tag references an image from the image table so that
@@ -258,3 +274,37 @@ exports.activateAccount = function(email, onDone){
 		onDone(err)
 	})
 }
+exports.saveUserSession = function(session_id, email, onDone){
+    var query = client.query('UPDATE "user" SET session_id=$1 WHERE email=$2',
+                [session_id,email])
+    query.on('end',  function() {
+		onDone(null)
+	})
+
+	query.on('error', function(err) {
+		onDone(err)
+	})
+}
+
+exports.getUserSession = function(session_id, onDone){
+    var match = new Array();
+    //var hashed_pass = hash(store.pass, store.email)
+    
+    var query = client.query('SELECT * FROM "user" WHERE session_id = $1', [session_id])
+
+	query.on('end', function() {
+		console.log('done with querying')
+		console.log(match)
+		if(match.length > 0) {
+			onDone(null, match[0])	
+		} else {
+			onDone('no match for user ' + session_id)
+		}
+		
+	})
+
+	query.on('row', function(row) {
+		match.push(row)
+	})
+        
+} 
