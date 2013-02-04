@@ -84,6 +84,7 @@ exports.getImages = function(req, res, next) {
 exports.postTag = function(req, res, next) {
     console.log(req.route.path)
 
+
     var store = {
         filename: req.params.id,
         link: req.body.link,
@@ -92,11 +93,19 @@ exports.postTag = function(req, res, next) {
         y: req.body.y
     }
 
+    console.log(store)
    
-    if(check(store.link).isUrl()) {
+    if(isFilled(store) && check(store.link).isUrl()) {
 
         var m = url.parse(store.link, false, true)
         m.protocol = "http"
+
+        console.log(m)
+
+        // if(m.path && !m.host) {
+        //     m.host = m.path
+        //     m.path = null;
+        // }
         
         console.log(m)
         store.link = url.format(m)
@@ -107,12 +116,13 @@ exports.postTag = function(req, res, next) {
             if(err) {
                 res.send('no url')
             } else {
-                res.redirect('/images/' + store.filename)
+                res.send(201, store)
+                //res.redirect('/images/' + store.filename)
             }
         })
     } else {
-        console.log('link is not valid')
-        res.send(500, 'Check your link again, please. Seems like it is not valid:(')
+        console.log('data is not valid')
+        res.send(400, 'Check your link again, please. Seems like it is not valid:(')
     }
 
 
@@ -147,8 +157,15 @@ exports.postImage = function(req, res, next) {
             res.redirect('/images/' + fname)
         }
     })
-    
+}
 
-    
-        
+
+var isFilled = function(obj) {
+    for(var name in obj) {
+
+        var property = obj[name]
+        console.log(property)
+        if(typeof property == 'undefined' || property == '') return false
+    }
+    return true
 }

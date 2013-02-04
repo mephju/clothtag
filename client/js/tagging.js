@@ -9,11 +9,12 @@
  tagging = (function() {
 
 	var inTagMode = false			//we need to keep track of if tag mode is on or off
-	var isDialogShowing = false		//keep track of the view state. is dialog showing or not
+	//var isDialogShowing = false		//keep track of the view state. is dialog showing or not
 	var filename = null;			//the filename of the image this view is showing
 
+	var tagEvent;
 
-	
+		
 
 	console.log('loading')
 	$(window).load(function() {
@@ -69,7 +70,9 @@
 		.click(function(ev) {
 			console.log(ev)
 			if(inTagMode) {
-				openDialog2(ev)
+				tagEvent = ev;
+				$('#tag-dialog').modal()
+				//openDialog2(ev)
 			}
 			ev.stopPropagation()
 		})
@@ -78,20 +81,21 @@
 
 
 		
-		$('html').click(function(e) {
-			//
-			//console.log('html click event tagMode:isDialogShowing ' + inTagMode + ':' + isDialogShowing)
-			//console.log(e)
-			if(isDialogShowing) closeDialog()
-			else if(inTagMode) toggleTagMode()
-		})
+		// $('html').click(function(e) {
+		// 	//
+		// 	//console.log('html click event tagMode:isDialogShowing ' + inTagMode + ':' + isDialogShowing)
+		// 	//console.log(e)
+		// 	if(isDialogShowing) closeDialog()
+		// 	else if(inTagMode) toggleTagMode()
+		// })
 
-		$('.btn').click(function(e) { 
-			e.stopPropagation() 
-		})
-		$('#dialog').click(function(e) { e.stopPropagation() })
+		// $('.btn').click(function(e) { 
+		// 	e.stopPropagation() 
+		// })
 
-		$('#dialog').click(function(e) { e.stopPropagation() })
+		// $('#dialog').click(function(e) { e.stopPropagation() })
+
+		// $('#dialog').click(function(e) { e.stopPropagation() })
 
 
 	}
@@ -185,7 +189,7 @@
 	 * In tag mode the cursor must change into a crosshair if hovering above of the image.
 	 * This function takes care of that behavior.
 	 */
-	toggleTagMode = function() {
+	var toggleTagMode = function() {
 		inTagMode = !inTagMode
 		console.log('toggleTagMode ' + inTagMode)
 		if(inTagMode) $('#image')[0].style.cursor='crosshair'
@@ -193,6 +197,68 @@
 			$('#image')[0].style.cursor='auto'
 		}
 	}
+
+
+
+
+
+	var postTag = function() {
+
+		$('#tag-submit-error').remove()
+
+		var ev = tagEvent
+		var offsetX = ev.offsetX;
+		var offsetY = ev.offsetY;
+
+		var values = $('#tag-dialog-form').serializeArray();
+
+		var store = { 
+			link: values[0].value,
+			title: values[1].value,
+			x: offsetX,
+			y: offsetY
+		}
+
+
+		if(/^http:\/\//g.test(store.link) == false) {
+			store.link = 'http://' + store.link
+		}
+
+		console.log('sendTag: this is just a test')
+		console.log("ev", offsetX, offsetY, ev)
+		
+		$.ajax({
+			type: "POST",
+			url: "/images/" + filename + "/tag",
+			//success: onSuccess
+			data: store
+		})
+		.done(function(data) {	
+			console.log('postTag returned', data)
+			//$('#tag-dialog').modal('hide')
+			window.location.reload();
+
+		})
+		.fail(function(fn, msg) {
+			console.log('fail()', msg, fn.responseText)
+			console.log(fn)
+
+			if(fn.status == 400) {
+				$('.modal-body').prepend('<p id="tag-submit-error">' +  fn.responseText + '</p>')
+			}
+
+		})
+		
+	}
+
+	var addTagToDoc = function(data) {
+		$('#tags').append('<div id="tags"')
+	}
+
+	$('#tag-submit').click(function() {
+		console.log('#tag-submit')
+		postTag();
+	})
 
 	return { 
 		toggleTagMode: toggleTagMode,
