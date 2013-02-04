@@ -1,52 +1,46 @@
+extend layout
 
-!!!
-html
-	head
+block append head
+
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js')
+	script(src='/libs/bootstrap/js/bootstrap.js')
+	script(src='http://davidlynch.org/projects/maphilight/jquery.maphilight.js')
 		
-		link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap.css')
-		link(rel='stylesheet', href='/css/basic.css')
-		link(rel='stylesheet', href='/css/style.css')
+block container
+	include image-dialog
+	include header
 
-		title= title
+	
+	div.container#image-container
+		div.row
+			div.span6
+				h2= title
+				p
+					a#image-link(href= fname)= fname
+				p
+			
+					img.resize(src=fname, id='image', usemap='#tagmap')
+					
+					map(id='tagmap', shape='circle', name='tagmap')
+						each tag, idx in tags
+							area.image-area(
+								class='tag' + idx, 
+								shape="circle", 
+								coords= tag.tag_x + ',' + tag.tag_y + ',' + 20, 
+								href='http://' + tag.link, 
+								title=tag.title, 
+								alt=tag.title)
 
-		script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js')
-		script(src='/libs/bootstrap/js/bootstrap.js')
-		script(src='http://davidlynch.org/projects/maphilight/jquery.maphilight.js')
-		
-	body
-		include image-dialog
-		include header
-
-		div.container#image-container
-			div.row
-				div.span6
-					h2= title
-					p
-						a#image-link(href= fname)= fname
-					p
-				
-						img.resize(src=fname, id='image', usemap='#tagmap')
-						
-						map(id='tagmap', shape='circle', name='tagmap')
-							each tag, idx in tags
-								area.image-area(
-									class='tag' + idx, 
-									shape="circle", 
-									coords= tag.tag_x + ',' + tag.tag_y + ',' + 20, 
-									href='http://' + tag.link, 
-									title=tag.title, 
-									alt=tag.title)
-
-						button.btn.btn-primary(onclick="tagging.toggleTagMode()") Tag That Photo
-				div#tags.span6
-					each tag, idx in tags
-						div.well.well-small.tag-info(id='tag' + idx)
-							- if (!tag.title_tag)
-								h4 No Title Given
-							- else 
-								h4= tag.title_tag	
-							p
-								a(href= tag.link)= tag.link
+					button.btn.btn-primary(onclick="tagging.toggleTagMode()") Tag That Photo
+			div#tags.span6
+				each tag, idx in tags
+					div.well.well-small.tag-info(id='tag' + idx)
+						- if (!tag.title_tag)
+							h4 No Title Given
+						- else 
+							h4= tag.title_tag	
+						p
+							a(href= tag.link)= tag.link
 
 
-		script(src='/js/tagging.js')
+	script(src='/js/tagging.js')

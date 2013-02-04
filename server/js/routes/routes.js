@@ -9,17 +9,6 @@ var user = require('../user/user')
 
 
 
-// var server  = email.server.connect({
-//     user:    "myhanhphucpham",
-//     password:"ithinkiloveu",
-//     host:    "smtp.gmail.com",
-//     ssl:     true
-// });
-
-
-
-
-
 exports.setRoutesOn = function(app) {
 
 
@@ -33,35 +22,34 @@ exports.setRoutesOn = function(app) {
     app.post('/images/:id/tag', imageRoutes.postTag)
     app.post('/images', imageRoutes.postImage)
 
-
-//    app.get('/register', function(req, res) {
-//                res.render('register', {
-//                    title:'register first',
-//                    template: 'register'
-//                })
-//            })
     app.get('/register', user.register)
     app.get('/login', user.login)   
     app.post('/login-success', user.loginSuccess)
+    app.get('/logout', user.logout)
     app.get('/register', user.register)
     app.post('/users', user.users)
     app.get('/activate', user.activate)
+    app.get('/myimages', imageRoutes.getMyImages)
     
-    app.get('/contact', function(req, res) {
-        res.render('contact', {
-            title:'Contact us',
-            template: 'contact'
-        })
-    })
+    app.get('/contact', imageRoutes.contact
+//    function(req, res) {
+//        res.render('contact', {
+//            title:'Contact us',
+//            username: username,
+//            template: 'contact'
+//        })
+    //}
+    )
 
-    app.get('/error', function(req, res){
-        var err = 'There was an error'
-        res.render('error',{
-            title: err,
-            error_message: err,
-            template: 'error'
-        })
-    })
+    app.get('/error', imageRoutes.error)
+//    function(req, res){
+//        var err = 'There was an error'
+//        res.render('error',{
+//            title: err,
+//            error_message: err,
+//            template: 'error'
+//        })
+//    })
 
     app.get('*', function(req, res){
         res.render('error', {

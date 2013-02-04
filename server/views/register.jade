@@ -1,10 +1,6 @@
-!!!
-html
-	head
-		
-		link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap.css')
-		link(rel='stylesheet', href='/css/basic.css')
-		link(rel='stylesheet', href='/css/style.css')
+extend layout
+
+block append head
 
 		script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js')
 		script(type='text/javascript', src='http://ajax.aspnetcdn.com/ajax/jquery.validate/1.10.0/jquery.validate.js')
@@ -14,11 +10,7 @@ html
 			$("#validation").validate();
 			});
 
-		title= title
-	body
-		include header
-
-		
+block container
 
 		div.container
 			h2= title

@@ -66,13 +66,12 @@
 				$(this).mouseout();
 			})
 		})
-		.click(function(ev) { ev.preventDefault(); })
+		//.click(function(ev) { ev.preventDefault(); })
 		.click(function(ev) {
-			console.log(ev)
+			console.log('click', ev)
 			if(inTagMode) {
 				tagEvent = ev;
 				$('#tag-dialog').modal()
-				//openDialog2(ev)
 			}
 			ev.stopPropagation()
 		})

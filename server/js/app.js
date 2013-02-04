@@ -28,7 +28,11 @@ app
 		uploadDir: '/tmp',
     	keepExtensions: true
 	}))
+        .use(express.cookieParser())
+        .use(express.session({ secret: "keyboard cat", cookie:{httpOnly:false},key:'cookie.sid'}))
 	.use(express.static(__dirname + '/../../client'));
+        
+
 
 routes.setRoutesOn(app);
 

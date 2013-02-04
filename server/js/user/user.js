@@ -6,15 +6,26 @@ var server  = email.server.connect({
     ssl:     true
 });
 var data = require('../model/data')
+var username = ''
 
 exports.login = function(req, res, next){
 // main login page
     //app.get('/login', function(req, res) {
         res.render('login', {
             title: 'Login',
+            username: username,
             template: 'login'
         })
     //})
+}
+
+exports.logout = function(req, res, next){
+// main login page
+    //app.get('/login', function(req, res) {
+    // clear cookie and session
+        res.clearCookie('session_id')
+        req.session.destroy(function(){})
+        res.redirect('/login')
 }
 
      
@@ -32,11 +43,22 @@ exports.login = function(req, res, next){
                 res.render('error',{
                     title: err_msg,
                     error_message: err_msg,
+                    username: username,
                     template: 'error'
                 })
             } else {
+                res.cookie('session_id',req.session.id)
+                data.saveUserSession(req.session.id, store.email, function(err){
+                    if(err) {
+                        console.log(err)
+                        res.send('Could not update database')
+                    } else {
 
-                res.redirect('/');
+                        res.redirect('/');
+                    }
+                })
+
+                //res.redirect('/');
             }
         })
     }
@@ -44,9 +66,12 @@ exports.login = function(req, res, next){
     
     
     exports.register = function(req, res) {
+        console.log(req.session.id)
+        //req.send({'r':req.session.test})
         console.log('register')
         res.render('register', {
             title: 'Hello New User',
+            username: username,
             template: 'register'
         })
     }
@@ -97,6 +122,7 @@ exports.login = function(req, res, next){
                         res.render('error',{
                             title: err_msg,
                             error_message: err_msg,
+                            username: username,
                             template: 'error'
                         })
                     }

@@ -1,16 +1,9 @@
-!!!
-html
-	head
-		
-		link(rel='stylesheet', href='/libs/bootstrap/css/bootstrap.css')
-		link(rel='stylesheet', href='/css/basic.css')
-		link(rel='stylesheet', href='/css/style.css')
+extend layout
 
-		title= title
+block append head
 
 		script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js')
-	body
-		include header
+block container
 
 		div.container#image-container
 			h2= title
