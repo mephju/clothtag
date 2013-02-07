@@ -6,9 +6,10 @@ var server  = email.server.connect({
     ssl:     true
 });
 var data = require('../model/data')
-var username = ''
+//var username = ''
 
 exports.login = function(req, res, next){
+    var username = ''
 // main login page
     //app.get('/login', function(req, res) {
         res.render('login', {
@@ -31,7 +32,7 @@ exports.logout = function(req, res, next){
      
     
     exports.loginSuccess = function(req, res, next) {
-
+        var username = ''
         console.log(req.body)
         var store = req.body
 
@@ -66,6 +67,7 @@ exports.logout = function(req, res, next){
     
     
     exports.register = function(req, res) {
+        var username = ''
         console.log(req.session.id)
         //req.send({'r':req.session.test})
         console.log('register')
@@ -80,7 +82,7 @@ exports.logout = function(req, res, next){
     
     exports.users = function(req, res) {
 
-
+    var username = ''
         console.log(req.body)
         var store = req.body
         store.isActive = false

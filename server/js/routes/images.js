@@ -8,14 +8,34 @@ var imageStore = require('../model/image-store')
 var check = require('validator').check
 var sanit = require('validator').sanitize
 var url = require('url')
-var username = ''
-var useremail = ''
-
+var helper = require('../user/helper')
 
 /**
  * Renders view images/new
  */
 exports.getNewImage = function(req, res, next) {
+    // jetzt passiert asynchronous callback
+    var username = ''//helper.getUserName --> es hat gar nicht geklappt
+    //console.log("hallo " + username)
+    if(req.cookies.session_id){ // if cookie still exists
+        console.log(req.cookies.session_id)
+        data.getUserSession(req.cookies.session_id, function ( err, match){
+           
+           if(err){
+                console.log(err)
+
+           }
+           else {
+                username = match.user
+                useremail = match.email
+                console.log( username)
+           }
+        })
+    }else{
+        username=''
+    }
+    //var username = helper.getUserName
+    
     res.render('images/new', {
         title:"Upload New Image",
         username: username,
@@ -30,6 +50,8 @@ exports.getNewImage = function(req, res, next) {
  */
 exports.getImages = function(req, res, next) {
     
+    var username = ''//getUserName(req)
+    //console.log("hallo " + username)
     if(req.cookies.session_id){ // if cookie still exists
         console.log(req.cookies.session_id)
         data.getUserSession(req.cookies.session_id, function ( err, match){
@@ -71,6 +93,26 @@ exports.getImages = function(req, res, next) {
  * Renders the image page for a particular image.
  */
  exports.getImage = function(req, res, next) {
+     var username = ''//getUserName(req)
+    //console.log("hallo " + username)
+    if(req.cookies.session_id){ // if cookie still exists
+        console.log(req.cookies.session_id)
+        data.getUserSession(req.cookies.session_id, function ( err, match){
+           
+           if(err){
+                console.log(err)
+
+           }
+           else {
+                username = match.user
+                useremail = match.email
+                console.log( username)
+           }
+        })
+    }else{
+        username=''
+    }
+    
      console.log("GET /images/:id")
      data.getImage(req.params.id, function(err, imageRec) {
          if(err) {
@@ -205,6 +247,26 @@ var isFilled = function(obj) {
 
 exports.getMyImages = function(req,res,next){
     
+    var username = ''//getUserName(req)
+    //console.log("hallo " + username)
+    if(req.cookies.session_id){ // if cookie still exists
+        console.log(req.cookies.session_id)
+        data.getUserSession(req.cookies.session_id, function ( err, match){
+           
+           if(err){
+                console.log(err)
+
+           }
+           else {
+                username = match.user
+                useremail = match.email
+                console.log( username)
+           }
+        })
+    }else{
+        username=''
+    }
+    
     data.getMyImages(useremail, function(err, images) {
         if(err) {
             console.log(err)
@@ -224,6 +286,26 @@ exports.getMyImages = function(req,res,next){
 }
 
 exports.contact = function(req,res, next){
+   var username = ''//helper.getUserName --> es hat gar nicht geklappt
+    //console.log("hallo " + username)
+    if(req.cookies.session_id){ // if cookie still exists
+        console.log(req.cookies.session_id)
+        data.getUserSession(req.cookies.session_id, function ( err, match){
+           
+           if(err){
+                console.log(err)
+
+           }
+           else {
+                username = match.user
+                useremail = match.email
+                console.log( username)
+           }
+        })
+    }else{
+        username=''
+    }
+    
     res.render('contact', {
             title:'Contact us',
             username: username,
@@ -232,6 +314,25 @@ exports.contact = function(req,res, next){
 }
 
 exports.error = function(req, res){
+    var username = ''//getUserName(req)
+    //console.log("hallo " + username)
+    if(req.cookies.session_id){ // if cookie still exists
+        console.log(req.cookies.session_id)
+        data.getUserSession(req.cookies.session_id, function ( err, match){
+           
+           if(err){
+                console.log(err)
+
+           }
+           else {
+                username = match.user
+                useremail = match.email
+                console.log( username)
+           }
+        })
+    }else{
+        username=''
+    }
         var err = 'There was an error'
         res.render('error',{
             title: err,
