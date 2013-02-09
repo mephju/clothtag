@@ -15,7 +15,7 @@ div.navbar.navbar-inverse.navbar-fixed-top
 							-else 
 								li
 									a(href='/') Home
-							-if(username!='')	
+							-if(typeof username != 'undefined' && username != '')	
 						
 								-if(template == 'images/new') 
 									li.active 
@@ -30,7 +30,7 @@ div.navbar.navbar-inverse.navbar-fixed-top
 							
 							div.right	
 								ul.nav
-									-if(username!='')
+									-if(typeof username != 'undefined' && username != '')
 										li
 											a(href='/') hallo #{username}
 										li	

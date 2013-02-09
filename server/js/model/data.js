@@ -17,6 +17,24 @@ var connectionString = 'postgres://_s0541224__clothtagdb_generic:clothtag@db.f4.
 client = new pg.Client(connectionString);
 client.connect();
 
+var statsOnTableImage = exports.statsOnTableImage = {}
+
+
+
+/**
+ * save the numbers of images into a public object called 'statsOnTableImage'
+ * 
+ */
+!function() {
+	var query = client.query('SELECT COUNT(*) FROM image')
+	query.on('end', function(){ })
+	query.on('row', function(row) {  
+		statsOnTableImage.rows = row.count
+		console.log('num of rows in image ' + statsOnTableImage.rows); 
+	})
+	query.on('error', function(err) { })
+}()
+
 // query = client.query('SELECT * FROM image');
 // query.on('row', function(row) { console.log(row)})
 // query.on('end', function() { client.end(); })
@@ -47,12 +65,14 @@ exports.addImage = function(store, useremail, onDone) {
 			var query = client.query('INSERT INTO image(filename, title, uploaded_by) VALUES($1, $2, $3)', [fname, store.title, useremail])	
 
 			query.on('end', function() {
+				statsOnTableImage.rows++;
 				onDone(error, store)
 			})
 
 			query.on('error', function(err) {
 				error = err;
 				console.log('error inserting image ' + err)
+				statsOnTableImage.rows--;
 			})
 		}		
 	}
@@ -102,12 +122,18 @@ exports.getImage = function(id, onDone) {
 
 
 
+
+
 /**
  * Retrieves meta data of up to 12 of the latest images.
  * @param  {[type]} onDone finish callback
  */
-exports.getImages = function(onDone) {
-	var query = client.query('SELECT * FROM image ORDER BY updated_at DESC LIMIT 12')
+exports.getImages = function(q, onDone) {
+
+	var pageSize = 12
+	var offset = pageSize * (q.page - 1)
+	//SELECT relname, n_tup_ins - n_tup_del as rowcount FROM pg_stat_all_tables;
+	var query = client.query('SELECT * FROM image ORDER BY updated_at DESC LIMIT $1 OFFSET $2', [pageSize, offset])
 
 	var rows = new Array();
 

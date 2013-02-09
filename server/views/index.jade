@@ -10,9 +10,15 @@ block container
 				div.offset2.span5
 					h3 Help others to find cool clothes
 					p You know where to buy the hat on that picture? Tell us and others will be just as happy to help you
-			div.row
-				p
+			
+
+
 		div.container
+			div.pagination
+				include pagination
+		div.container
+
+
 			-for (var i=0; i<images.length; i++) 
 
 				- if ((i%4) == 0)
@@ -23,3 +29,6 @@ block container
 									h2= images[i+j].title
 									img(src='http://www.clothtag.99k.org/' + images[i+j].filename)
 								-if(j == 3) i=i+j
+		div.container
+			div.pagination
+				include pagination

@@ -48,20 +48,34 @@ exports.getImages = function(req, res, next) {
         username=''
     }
          
+
+    //if page param is not set or set with invalid values, we must set it ourselves so we can use the same code for
+    //requests that set that param and those that don't
+    if(typeof req.query.page == 'undefined' 
+        || req.query.page < 1 
+        || isNaN(req.query.page) 
+        || req.query.page > Math.ceil(data.statsOnTableImage.rows/12)) {
+
+        req.query.page = 1
+    }
+
     
-    data.getImages(function(err, images) {
+
+
+    data.getImages(req.query, function(err, images) {
         if(err) {
             console.log(err)
             serveError("Could not fetch images", req, res, next)
-        } else {
-            
-                //console.log(images)
-                res.render('index', {
-                       title: "Recent Images",
-                       images: images,
-                       username: username,
-                       template: 'index'
-                })
+        } else {          
+            console.log(images)
+            res.render('index', {
+                   title: "Recent Images",
+                   images: images,
+                   username: username,
+                   template: 'index',
+                   page: req.query.page,                    //the page that user has requested...we will use this for pagination in the view
+                   numRows: data.statsOnTableImage.rows     //number of approximate rows in the db...we will use this for pagination in the view
+            })
             
         }
     })
@@ -123,23 +137,7 @@ exports.postTag = function(req, res, next) {
 
     console.log(store)
    
-    if(isFilled(store) && check(store.link).isUrl()) {
-
-        var m = url.parse(store.link, false, true)
-        m.protocol = "http"
-
-        console.log(m)
-
-        // if(m.path && !m.host) {
-        //     m.host = m.path
-        //     m.path = null;
-        // }
-        
-        console.log(m)
-        store.link = url.format(m)
-
-
-        console.log('link is valid', store.link)
+    if(isFilled(store) && isValidUrl(store.link)) {
         data.addTag(store, function(err) {
             if(err) {
                 res.send('no url')
@@ -151,12 +149,27 @@ exports.postTag = function(req, res, next) {
     } else {
         console.log('data is not valid')
         res.send(400, 'Check your link again, please. Seems like it is not valid:(')
-    }
-
-
-
-    
+    }    
 }
+
+
+/**
+ * Checks if a given string is a
+ * @param  {[type]}  string [description]
+ * @return {Boolean}        [description]
+ */
+var isValidUrl = function(string) {
+    try{
+        if(check(string).isUrl() && /^http/g.test(string)) {
+            var m = url.parse(string, false, true)
+            console.log('link is valid')
+            return true
+        }
+    } catch(err) {
+        console.log(err)
+    }
+    return false
+} 
 
 
 /**
@@ -173,22 +186,32 @@ exports.postImage = function(req, res, next) {
         path: req.files.image.path,
         title: req.body.title
     }
+    if(isFilled(store)) {
+        data.addImage(store, useremail, function(err, newStore) {
+            console.log('add image onDonbe')
 
-    data.addImage(store, useremail, function(err, newStore) {
-        console.log('add image onDonbe')
+            if(err) {
+                res.redirect('/error')
+            } else {
+                var splits = newStore.path.split('/');
+                var fname = splits[splits.length-1]
+                res.redirect('/images/' + fname)
+            }
+        })
+    } else {
+        exports.getNewImage(req,res,next);
+    }
 
-        if(err) {
-            res.redirect('/error')
-        } else {
-            var splits = newStore.path.split('/');
-            var fname = splits[splits.length-1]
-            res.redirect('/images/' + fname)
-        }
-    })
+        
 }
 
 
-
+/**
+ * Checks for defined properties in an object.
+ * If undefined or empty properties are found, false is returned 
+ * @param  {[type]}  obj [description]
+ * @return {Boolean}     [description]
+ */
 var isFilled = function(obj) {
     for(var name in obj) {
 
