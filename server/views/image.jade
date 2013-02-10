@@ -27,10 +27,10 @@ block container
 								class='tag' + idx, 
 								shape="circle", 
 								coords= tag.tag_x + ',' + tag.tag_y + ',' + 20, 
-								href='http://' + tag.link, 
+								href= tag.link, 
 								title=tag.title, 
 								alt=tag.title)
-
+				p
 					button.btn.btn-primary(onclick="tagging.toggleTagMode()") Tag That Photo
 			div#tags.span6
 				each tag, idx in tags

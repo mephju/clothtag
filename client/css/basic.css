@@ -3,6 +3,10 @@ body {
 }
 
 
+.navbar {
+	background-color: #fff;
+}
+
 .right{
     float: right;
     position: relative;

@@ -269,6 +269,8 @@ var isFilled = function(obj) {
 
 
 exports.getMyImages = function(req,res,next){
+
+
     
     var username = ''//getUserName(req)
     //console.log("hallo " + username)
@@ -297,11 +299,11 @@ exports.getMyImages = function(req,res,next){
         } else {
             
                 //console.log(images)
-                res.render('index', {
+                res.render('my-images', {
                        title: "Recent Images",
                        images: images,
                        username: username,
-                       template: 'index'
+                       template: 'my-images',
                 })
             
         }
