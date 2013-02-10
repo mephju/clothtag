@@ -1,34 +1,43 @@
 extends layout
 		
 block container
-		div.container
-			div.row
-				div.span5 
-					h3 Find the clothes you've always wanted
-					p Upload a picture displaying the object of your desire. Our users will be happy to help you out by tagging the picture with links to shops selling this fine garment.
-
-				div.offset2.span5
-					h3 Help others to find cool clothes
-					p You know where to buy the hat on that picture? Tell us and others will be just as happy to help you
-			
-
-
-		div.container
-			div.pagination
-				include pagination
-		div.container
-
-
-			-for (var i=0; i<images.length; i++) 
-
-				- if ((i%4) == 0)
+	div.carousel.slide
+		div.carousel-inner
+			div.item.active
+				img(src='../img/bg.jpg')
+				div.container
 					div.row
-						-for(var j=0; j<4 && (i+j) < images.length; j++)
-							div.span3
+						.span5
+							div.carousel-caption
+								h1 Find the clothes you've always wanted
+								p Upload a picture displaying the object of your desire. Our users will be happy to help you out by tagging the picture with links to shops selling this fine garment.
+
+						.offset2.span5
+							.carousel-caption
+								h1 Help others to find cool clothes
+								p You know where to buy the hat on that picture? Tell us and others will be just as happy to help you
+					
+	.between
+
+
+	div.container
+		div.pagination
+			include pagination
+	div.container
+
+
+		-for (var i=0; i<images.length; i++) 
+
+			- if ((i%4) == 0)
+				div.row.thumbnails
+					-for(var j=0; j<4 && (i+j) < images.length; j++)
+						div.span3
+							.thumbnail
 								a(href='/images/' + images[i+j].filename) 
-									h2= images[i+j].title
+									.caption
+										h2= images[i+j].title
 									img(src='http://www.clothtag.99k.org/' + images[i+j].filename)
 								-if(j == 3) i=i+j
-		div.container
-			div.pagination
-				include pagination
+	div.container
+		div.pagination
+			include pagination

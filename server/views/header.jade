@@ -1,44 +1,46 @@
-div.navbar.navbar-inverse.navbar-fixed-top
+
+div.navbar-wrapper
+	div.container
+
+		div.navbar.navbar-inverse
 			div.navbar-inner
 				div.container
-					a.btn.btn-navbar
-						span.icon-bar
-						span.icon-bar
-						span.icon-bar
-					a.brand(href='/') Clothtag
-
-					div.nav-collapse.collapse
-						ul.nav
-							-if(template == 'index') 
-								li.active 
-									a(href='/') Home
-							-else 
-								li
-									a(href='/') Home
-							-if(typeof username != 'undefined' && username != '')	
-						
-								-if(template == 'images/new') 
-									li.active 
-										a(href='/images/new') New Image
+					.span1
+						a.brand(href='/') Clothtag
+					.span7
+						div.nav-collapse.collapse
+							ul.nav.span8
+								-if(template == 'index') 
+									li.active
+										a(href='/') 
+											i.icon-home.icon-white 
+											| Home
 								-else 
 									li
-										a(href='/images/new') New Image
-								li
-									a(href='/myimages') My Images
-							li
-								a(href='/contact') Contact
+										a(href='/') Home
+								-if(typeof username != 'undefined' && username != '')	
 							
-
-							div.right	
-								ul.nav
-									-if(typeof username != 'undefined' && username != '')
-										li
-											a(href='/') hallo #{username}
-										li	
-											a(href='/logout') Sign out
+									-if(template == 'images/new') 
+										li.active 
+											a(href='/images/new') New Image
 									-else 
 										li
-											a(href='/login') Sign in
-										li
-											a(href='/register') Register
+											a(href='/images/new') New Image
+									li
+										a(href='/myimages') My Images
+								li
+									a(href='/contact') Contact
+								
+					.span3	
+						ul.nav
+							-if(typeof username != 'undefined' && username != '')
+								li
+									a(href='/') hallo #{username}
+								li	
+									a(href='/logout') Sign out
+							-else 
+								li
+									a(href='/login') Sign in
+								li
+									a(href='/register') Register
 
