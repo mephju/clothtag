@@ -1,7 +1,9 @@
+
 /**
  * This module's only ppurpose is to associate routes to their controller 
  * functions. 
  */
+
 
 var data = require('../model/data')
 var imageRoutes = require('./images')
@@ -21,6 +23,7 @@ exports.setRoutesOn = function(app) {
     app.get('/images/:id', imageRoutes.getImage)
     app.post('/images/:id/tag', imageRoutes.postTag)
     app.post('/images', imageRoutes.postImage)
+
 
     app.get('/register', user.register)
     app.get('/login', user.login)   
@@ -58,6 +61,7 @@ exports.setRoutesOn = function(app) {
             template:'error'
         })
     });
+
 
 }
 

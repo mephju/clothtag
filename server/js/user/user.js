@@ -6,7 +6,7 @@ var server  = email.server.connect({
     ssl:     true
 });
 var data = require('../model/data')
-//var username = ''
+
 
 exports.login = function(req, res, next){
     var username = ''
@@ -67,9 +67,11 @@ exports.logout = function(req, res, next){
     
     
     exports.register = function(req, res) {
+
         var username = ''
         console.log(req.session.id)
         //req.send({'r':req.session.test})
+
         console.log('register')
         res.render('register', {
             title: 'Hello New User',

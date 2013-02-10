@@ -3,6 +3,7 @@ body {
 }
 
 
+
 .navbar {
 	background-color: #fff;
 }
@@ -16,3 +17,14 @@ body {
 .error{
     color: red;
 }
+
+.register{
+    float: left;
+   
+    border: 1px solid red;
+    
+}
+.form-inline {
+    float: left;
+}
+
