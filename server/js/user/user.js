@@ -82,7 +82,7 @@ exports.logout = function(req, res, next){
     
     exports.users = function(req, res) {
 
-    var username = ''
+        var username = ''
         console.log(req.body)
         var store = req.body
         store.isActive = false
@@ -92,7 +92,14 @@ exports.logout = function(req, res, next){
             
             if(err) {
                 console.log(err)
-                res.send('Error creating user')
+                //res.send('Error creating user')
+                var err_msg = 'Error creating user - User already exists'
+                res.render('error',{
+                            title: err_msg,
+                            error_message: err_msg,
+                            username: username,
+                            template: 'error'
+                        })
             } else {
                 var link = '<p><a href="http://localhost:3000/activate?email=' + store.email +'">Activate your account</a></p>'
                 var recipient = store.user + ' <' + store.email + '>'
@@ -103,8 +110,8 @@ exports.logout = function(req, res, next){
 
                 var message = {
                     text:    "i hope this works",
-                    from:    "you <myhanhphucpham@gmail.com>",
-                    to:      recipient,//"tien <idonwant2missathing@yahoo.com>",
+                    from:    "you <clothtag@gmail.com>",
+                    to:      recipient,//
                     subject: "link activation",
                     attachment:
                     [
@@ -120,7 +127,7 @@ exports.logout = function(req, res, next){
                         console.log(err || message);
                         //res.send('cannot send activation link')
                         
-                        var err_msg = 'cannot send activation link'
+                        var err_msg = 'cannot send activation link - user already exists'
                         res.render('error',{
                             title: err_msg,
                             error_message: err_msg,
@@ -129,9 +136,12 @@ exports.logout = function(req, res, next){
                         })
                     }
                     else{
-                        res.render('users', {
-                            title:'Please activate your account',
-                            template: 'user'
+                        err_msg = 'Please activate your link'
+                        res.render('error',{
+                            title: err_msg,
+                            error_message: err_msg,
+                            username: username,
+                            template: 'error'
                         })
                     }
 
@@ -139,14 +149,7 @@ exports.logout = function(req, res, next){
 
             }
             
-        })} else {
-                var err_msg = 'invalid fields'
-                        res.render('error',{
-                            title: err_msg,
-                            error_message: err_msg,
-                            template: 'error'
-                        })
-            }
+        })}
     }
 
     

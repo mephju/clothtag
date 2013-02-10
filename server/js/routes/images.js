@@ -15,32 +15,38 @@ var helper = require('../user/helper')
  */
 exports.getNewImage = function(req, res, next) {
     // jetzt passiert asynchronous callback
-    var username = ''//helper.getUserName --> es hat gar nicht geklappt
-    //console.log("hallo " + username)
-    if(req.cookies.session_id){ // if cookie still exists
-        console.log(req.cookies.session_id)
-        data.getUserSession(req.cookies.session_id, function ( err, match){
-           
-           if(err){
-                console.log(err)
-
-           }
-           else {
-                username = match.user
-                useremail = match.email
-                console.log( username)
-           }
-        })
-    }else{
-        username=''
-    }
-    //var username = helper.getUserName
-    
-    res.render('images/new', {
-        title:"Upload New Image",
-        username: username,
-        template:'images/new'
-    })
+//    var username = '' //console.log("hallo " + username)
+//    if(req.cookies.session_id){ // if cookie still exists
+//        //username = ''
+//        console.log(req.cookies.session_id)
+//        data.getUserSession(req.cookies.session_id, function ( err, match){
+//           
+//           if(err){
+//                console.log(err)
+//
+//           }
+//           else {
+//                username = match.user
+//                //useremail = match.email
+//                console.log( username)
+//                res.render('images/new', {
+//                    title:"Upload New Image",
+//                    username: username,
+//                    template:'images/new'
+//                })
+//           }
+//        })
+//        
+//        
+//    }else{
+//    
+//        res.render('images/new', {
+//            title:"Upload New Image",
+//            username: username,
+//            template:'images/new'
+//        })
+//    }
+    helper.getSessionData('images/new', req, res, next)
 }
 
 
@@ -51,7 +57,7 @@ exports.getNewImage = function(req, res, next) {
 exports.getImages = function(req, res, next) {
     
     var username = ''//getUserName(req)
-    //console.log("hallo " + username)
+    //var useremail = ''//console.log("hallo " + username)
     if(req.cookies.session_id){ // if cookie still exists
         console.log(req.cookies.session_id)
         data.getUserSession(req.cookies.session_id, function ( err, match){
@@ -62,14 +68,12 @@ exports.getImages = function(req, res, next) {
            }
            else {
                 username = match.user
-                useremail = match.email
-                console.log( username)
+                //useremail = match.email
+                //console.log( username)
            }
         })
-    }else{
-        username=''
     }
-         
+     
     
     data.getImages(function(err, images) {
         if(err) {
@@ -78,11 +82,14 @@ exports.getImages = function(req, res, next) {
         } else {
             
                 //console.log(images)
+                //console.log( username)
+                //console.log( useremail)
                 res.render('index', {
                        title: "Recent Images",
                        images: images,
                        username: username,
-                       template: 'index'
+                       template: 'index',
+                       currentURL: ''
                 })
             
         }
@@ -94,7 +101,7 @@ exports.getImages = function(req, res, next) {
  */
  exports.getImage = function(req, res, next) {
      var username = ''//getUserName(req)
-    //console.log("hallo " + username)
+     //var useremail = ''//console.log("hallo " + username)
     if(req.cookies.session_id){ // if cookie still exists
         console.log(req.cookies.session_id)
         data.getUserSession(req.cookies.session_id, function ( err, match){
@@ -206,7 +213,27 @@ exports.postTag = function(req, res, next) {
  * of the uploaded image in case of success.
  */
 exports.postImage = function(req, res, next) {
- 
+    
+    var username = ''//getUserName(req)
+    var useremail =  ''//console.log("hallo " + username)
+    if(req.cookies.session_id){ // if cookie still exists
+        console.log(req.cookies.session_id)
+        data.getUserSession(req.cookies.session_id, function ( err, match){
+           
+           if(err){
+                console.log(err)
+
+           }
+           else {
+                username = match.user
+                useremail = match.email
+                console.log( username)
+           }
+        })
+    }else{
+        username=''
+    }
+    
     console.log('images.postImage')
 
     console.log(req.files)
@@ -248,7 +275,7 @@ var isFilled = function(obj) {
 exports.getMyImages = function(req,res,next){
     
     var username = ''//getUserName(req)
-    //console.log("hallo " + username)
+    var useremail =  ''//console.log("hallo " + username)
     if(req.cookies.session_id){ // if cookie still exists
         console.log(req.cookies.session_id)
         data.getUserSession(req.cookies.session_id, function ( err, match){
@@ -260,63 +287,50 @@ exports.getMyImages = function(req,res,next){
            else {
                 username = match.user
                 useremail = match.email
-                console.log( username)
-           }
+                
+           
+        
+            data.getMyImages(useremail, function(err, images) {
+            if(err) {
+                console.log(err)
+                serveError("Could not fetch images", req, res, next)
+            } else {
+
+                    console.log(images)
+                    console.log(username)
+                    console.log(useremail)
+                    res.render('index', {
+                           title: "Recent Images",
+                           images: images,
+                           username: username,
+                           template: 'index',
+                           currentURL: '/myimages'
+                    })
+
+                }
+            })
+        }
         })
     }else{
-        username=''
+        res.redirect('/')
     }
     
-    data.getMyImages(useremail, function(err, images) {
-        if(err) {
-            console.log(err)
-            serveError("Could not fetch images", req, res, next)
-        } else {
-            
-                //console.log(images)
-                res.render('index', {
-                       title: "Recent Images",
-                       images: images,
-                       username: username,
-                       template: 'index'
-                })
-            
-        }
-    })
+    
 }
 
 exports.contact = function(req,res, next){
-   var username = ''//helper.getUserName --> es hat gar nicht geklappt
-    //console.log("hallo " + username)
-    if(req.cookies.session_id){ // if cookie still exists
-        console.log(req.cookies.session_id)
-        data.getUserSession(req.cookies.session_id, function ( err, match){
-           
-           if(err){
-                console.log(err)
-
-           }
-           else {
-                username = match.user
-                useremail = match.email
-                console.log( username)
-           }
-        })
-    }else{
-        username=''
-    }
+   helper.getSessionData('contact', req, res, next)
+   
     
-    res.render('contact', {
-            title:'Contact us',
-            username: username,
-            template: 'contact'
-        })
+    
 }
 
-exports.error = function(req, res){
-    var username = ''//getUserName(req)
-    //console.log("hallo " + username)
+exports.error = function(req, res, next){
+    //helper.getSessionData('error', req, res, next)
+    var err = 'There was an error'
+    var username = '' //console.log("hallo " + username)
     if(req.cookies.session_id){ // if cookie still exists
+        //username = ''
         console.log(req.cookies.session_id)
         data.getUserSession(req.cookies.session_id, function ( err, match){
            
@@ -326,19 +340,28 @@ exports.error = function(req, res){
            }
            else {
                 username = match.user
-                useremail = match.email
+                //useremail = match.email
                 console.log( username)
+                res.render('error',{
+                    title: err,
+                    error_message: err,
+                    template: 'error',
+                    username: username
+                })
            }
         })
+        
+        
     }else{
-        username=''
-    }
-        var err = 'There was an error'
         res.render('error',{
             title: err,
             error_message: err,
             template: 'error',
             username: username
         })
+    }
+    
+        
+        
     }
 

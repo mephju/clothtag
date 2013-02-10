@@ -25,8 +25,13 @@ div.navbar.navbar-inverse.navbar-fixed-top
 										a(href='/images/new') New Image
 								li
 									a(href='/myimages') My Images
-							li
-								a(href='/contact') Contact
+							
+							-if(template=='contact')
+								li.active
+									a(href='/contact') Contact
+							-else 
+								li
+									a(href='/contact') Contact									
 							
 							div.right	
 								ul.nav
@@ -35,8 +40,16 @@ div.navbar.navbar-inverse.navbar-fixed-top
 											a(href='/') hallo #{username}
 										li	
 											a(href='/logout') Sign out
-									-else 
-										li
-											a(href='/login') Sign in
-										li
-											a(href='/register') Register
+									-else
+										-if(template == 'login')
+												li.active
+													a(href='/login') Sign in
+										-else
+											li
+												a(href='/login') Sign in
+										-if(template=='register')
+											li.active
+													a(href='/register') Register
+										-else
+											li
+												a(href='/register') Register

@@ -123,11 +123,12 @@ exports.getImages = function(onDone) {
 }
 
 exports.getMyImages = function(useremail, onDone) {
+    console.log(useremail)
     var query = client.query('SELECT * FROM image WHERE uploaded_by=$1',[useremail])
 
 	var rows = new Array();
 
-	var rows = new Array();
+	//var rows = new Array();
 
 	query.on('end', function() {
 		onDone(null, rows)
